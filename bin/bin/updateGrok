@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# HTML page: /var/lib/tomcat7/webapps/source/index_body.html
+set -e
+
+update(){
+    cd /var/opengrok/src/${1}
+    git fetch --all
+    git reset --hard origin/${2}
+
+    if [ "${3}" == 'true' ] ; then
+        ./autogen.sh && ./configure && make doxygen
+        cp -R dox/html /var/www/html/dox
+        git clean -fdx
+    fi
+}
+
+update BGELTZ-DEV-github-bgeltz-geopm bgeltz-dev
+update DEV-gerrithub-geopm dev true
+update DEV-github-geopm dev
+update KONTROLLER bgeltz-balancer
+
+cd /opt/opengrok-0.12.1/bin
+./OpenGrok index
