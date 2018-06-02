@@ -59,6 +59,7 @@ alias ayfi='repo forall -c "git reset -q --hard HEAD && git clean -qfd" -j9'
 alias rsy='repo sync -j5'
 alias rst='repo status -j`nproc`'
 alias beep='echo -en "\007"'
+alias vi='vim'
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
