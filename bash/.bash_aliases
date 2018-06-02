@@ -95,9 +95,13 @@ mll() (
   (($#)) && exec ls --color=auto  -h --group-directories-first -ldU -- "$@"
 )
 
-# SLURM Aliases
+# Cluster aliases
 scancel_cleanup(){
     /usr/bin/scancel -s TERM ${1} && sleep 3 && /usr/bin/scancel ${1}
 }
 alias scancel=scancel_cleanup
+
+copy_logs(){
+    TIMESTAMP=$(date +%F_%H%M); mkdir ~/public_html/misc_logs/${TIMESTAMP} && cp ${1} ~/public_html/misc_logs/${TIMESTAMP}
+}
 
