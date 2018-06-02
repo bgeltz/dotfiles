@@ -1,12 +1,43 @@
-# ~/.bashrc: executed by bash(1) for non-login shells.
-# see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
-# for examples
+# .bashrc
 
 # If not running interactively, don't do anything
 case $- in
     *i*) ;;
       *) return;;
 esac
+
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+	. /etc/bashrc
+fi
+
+# Source pricate definitions
+if [ -f ~/.bashrc-private ]; then
+    . ~/.bashrc-private
+fi
+
+# enable programmable completion features (you don't need to enable
+# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
+# sources /etc/bash.bashrc).
+if ! shopt -oq posix; then
+  if [ -f /usr/share/bash-completion/bash_completion ]; then
+    . /usr/share/bash-completion/bash_completion
+  elif [ -f /etc/bash_completion ]; then
+    . /etc/bash_completion
+  fi
+fi
+
+#
+# Add the stgit-completion.bash for tab completion in stgit (from the STgit repo)
+#
+if [ -f ~/.stgit-completion.bash ]; then
+    . ~/.stgit-completion.bash
+fi
+
+# Alias definitions.
+if [ -f ~/.bash_aliases ]; then
+    . ~/.bash_aliases
+fi
 
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
@@ -56,16 +87,12 @@ if [ -n "$force_color_prompt" ]; then
     fi
 fi
 
-parse_git_branch() {
-     git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
-}
-
 if [ "$color_prompt" = yes ]; then
     PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
 else
 #    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
     #PS1='[${debian_chroot:+($debian_chroot)}\u@\h \W]\$ '
-    PS1="[${debian_chroot:+($debian_chroot)}\u@\h \W]\[\033[33m\]\$(parse_git_branch)\[\033[00m\]\$ "
+    PS1="[${debian_chroot:+($debian_chroot)}\u@\h \W]\[\033[33m\]\$(_current_branch_pretty)\[\033[00m\]\$ "
 fi
 unset color_prompt force_color_prompt
 
@@ -78,91 +105,30 @@ xterm*|rxvt*)
     ;;
 esac
 
-# enable color support of ls and also add handy aliases
-if [ -x /usr/bin/dircolors ]; then
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-    alias ls='ls --color=auto  -h --group-directories-first'
-    #alias dir='dir --color=auto'
-    #alias vdir='vdir --color=auto'
-
-    alias grep='grep --color=auto'
-    alias fgrep='fgrep --color=auto'
-    alias egrep='egrep --color=auto'
-fi
-
-# some more ls aliases
-alias ll='ls -lF'
-alias la='ls -AF'
-alias l='ls -CLF'
-
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
-if [ -f ~/.bashrc-private ]; then
-    . ~/.bashrc-private
-fi
-
-# Alias definitions.
-# You may want to put all your additions into a separate file like
-# ~/.bash_aliases, instead of adding them here directly.
-# See /usr/share/doc/bash-doc/examples in the bash-doc package.
-if [ -f ~/.bash_aliases ]; then
-    . ~/.bash_aliases
-fi
-
-# enable programmable completion features (you don't need to enable
-# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
-# sources /etc/bash.bashrc).
-if ! shopt -oq posix; then
-  if [ -f /usr/share/bash-completion/bash_completion ]; then
-    . /usr/share/bash-completion/bash_completion
-  elif [ -f /etc/bash_completion ]; then
-    . /etc/bash_completion
-  fi
-fi
-
-#
-# Add the stgit-completion.bash for tab completion in stgit (from the STgit repo)
-#
-if [ -f ~/.stgit-completion.bash ]; then
-    . ~/.stgit-completion.bash
-fi
-
 export GIT_PROXY_COMMAND=/usr/bin/socks-gw
-
 export PATH="${HOME}/bin:${HOME}/build/geopm/bin:${PATH}"
 export HISTTIMEFORMAT="%m/%d/%y %T "
-
-export USE_CCACHE=1
-export CCACHE_DIR=/mnt/ssd/ccache
-
-export ANDROID_CONSOLE=serial
-
-export TERM=xterm-256color
+#export USE_CCACHE=1
+#export CCACHE_DIR=/mnt/ssd/ccache
+#export ANDROID_CONSOLE=serial
+#export TERM=xterm-256color
 #export TERM=screen-256color
-
-#ulimit -n 8192
-
-fortune
-
-stty erase '^?'
-
-h2d(){
-  echo "ibase=16; $@"|bc
-}
-d2h(){
-  echo "obase=16; $@"|bc
-}
 export PYTHONPATH=${PYTHONPATH}:${HOME}/build/geopm/lib/python2.7/site-packages
-
 export EDITOR=vi
-
 export CATALINA_HOME=/usr/share/tomcat7
 export OPENGROK_TOMCAT_BASE=$CATALINA_HOME
 export SRC_ROOT=${HOME}/git/geopm
 export GOPATH="$HOME/workspace"
 unset GNOME_KEYRING_CONTROL
+export TZ="/usr/share/zoneinfo/US/Pacific"
+
+stty erase '^?'
+#ulimit -n 8192
+fortune
 
 # added by travis gem
 [ -f /home/bgeltz/.travis/travis.sh ] && source /home/bgeltz/.travis/travis.sh

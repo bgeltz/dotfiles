@@ -1,7 +1,5 @@
 #!/bin/bash
 
-EMAILS='r=christopher.m.cantalupo@intel.com,r=diana.r.guttman@intel.com,r=brandon.baker@intel.com'
-
 # Apt related aliases
 alias aptU="sudo apt-get update"
 alias aptD="sudo apt-get dist-upgrade"
@@ -14,6 +12,14 @@ alias s='module purge && module load gnu mvapich2 autotools'
 alias si='module purge && module load intel mvapich2 autotools'
 
 # Git related aliases
+# Name of the current branch, or empty if there isn't one.
+_current_branch_pretty ()
+{
+    local b=$(_current_branch) #From .stgit-completion.bash
+    echo ${b:+(${b})}
+}
+
+EMAILS='r=christopher.m.cantalupo@intel.com,r=diana.r.guttman@intel.com,r=brandon.baker@intel.com'
 review(){
     echo "git push origin ${1}:refs/for/dev%${EMAILS}"
     git push origin ${1}:refs/for/dev%${EMAILS}
@@ -26,7 +32,11 @@ delete_branch(){
 }
 
 pp(){
-    git push -f bgeltz-public $(git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/')
+    if [ -n "$(_current_branch)" ]; then
+        git push -f bgeltz-public $(_current_branch)
+    else
+        echo "Not on a git branch."
+    fi
 }
 
 alias dev_review="git push origin HEAD:refs/for/dev%${EMAILS}"
@@ -37,12 +47,34 @@ alias githist="git for-each-ref --sort=-committerdate refs/heads/ refs/remotes/ 
 alias save="git commit -a --amend --no-edit"
 
 # Misc
+h2d(){
+  echo "ibase=16; $@"|bc
+}
+d2h(){
+  echo "obase=16; $@"|bc
+}
 alias c='pygmentize -g'
 alias h='c /home/bgeltz/Documents/git_notes.txt'
 alias ayfi='repo forall -c "git reset -q --hard HEAD && git clean -qfd" -j9'
 alias rsy='repo sync -j5'
 alias rst='repo status -j`nproc`'
 alias beep='echo -en "\007"'
+
+# enable color support of ls and also add handy aliases
+if [ -x /usr/bin/dircolors ]; then
+    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    alias ls='ls --color=auto  -h --group-directories-first'
+    #alias dir='dir --color=auto'
+    #alias vdir='vdir --color=auto'
+
+    alias grep='grep --color=auto'
+    alias fgrep='fgrep --color=auto'
+    alias egrep='egrep --color=auto'
+fi
+
+alias ll='ls -lF'
+alias la='ls -AF'
+alias l='ls -CLF'
 
 # some more ls aliases
 # https://unix.stackexchange.com/a/111639
@@ -62,6 +94,9 @@ mll() (
   (($#)) && exec ls --color=auto  -h --group-directories-first -ldU -- "$@"
 )
 
-alias ll='ls -lF'
-alias la='ls -AF'
-alias l='ls -CLF'
+# SLURM Aliases
+scancel_cleanup(){
+    /usr/bin/scancel -s TERM ${1} && sleep 3 && /usr/bin/scancel ${1}
+}
+alias scancel=scancel_cleanup
+
