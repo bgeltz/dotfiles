@@ -33,6 +33,14 @@ delete_branch(){
 
 pp(){
     if [ -n "$(_current_branch)" ]; then
+        git push bgeltz-public $(_current_branch)
+    else
+        echo "Not on a git branch."
+    fi
+}
+
+ppf(){
+    if [ -n "$(_current_branch)" ]; then
         git push -f bgeltz-public $(_current_branch)
     else
         echo "Not on a git branch."
