@@ -110,7 +110,7 @@ esac
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
 export GIT_PROXY_COMMAND=/usr/bin/socks-gw
-export PATH="${HOME}/bin:${HOME}/build/geopm/bin:${PATH}"
+export PATH="${HOME}/bin:${HOME}/build/geopm/bin:${HOME}/build/msr-tools/bin:${PATH}"
 export HISTTIMEFORMAT="%m/%d/%y %T "
 #export USE_CCACHE=1
 #export CCACHE_DIR=/mnt/ssd/ccache
