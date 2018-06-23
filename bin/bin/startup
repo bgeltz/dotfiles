@@ -2,3 +2,4 @@
 
 sleep 20
 redshift -l 45.5200:-122.6819 -t 4800:3700 &
+nitrogen --restore

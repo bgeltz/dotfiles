@@ -47,6 +47,14 @@ ppf(){
     fi
 }
 
+ppfd(){
+    if [ -n "$(_current_branch)" ]; then
+        git push -f bgeltz-public $(_current_branch):bgeltz-dev
+    else
+        echo "Not on a git branch."
+    fi
+}
+
 alias dev_review="git push origin HEAD:refs/for/dev%${EMAILS}"
 alias gs='git status'
 alias gd='git diff'
@@ -61,6 +69,7 @@ h2d(){
 d2h(){
   echo "obase=16; $@"|bc
 }
+alias b='google-chrome --new-window'
 alias c='pygmentize -g'
 alias h='c /home/bgeltz/Documents/git_notes.txt'
 alias ayfi='repo forall -c "git reset -q --hard HEAD && git clean -qfd" -j9'

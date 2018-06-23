@@ -36,8 +36,8 @@ fi
 
 make -j${PROCS}
 make install
+make -j${PROCS} checkprogs
 
 if [ -n "${RUN_TESTS}" ]; then
-    make -j${PROCS} checkprogs
     make check
 fi
