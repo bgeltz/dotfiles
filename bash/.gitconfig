@@ -4,7 +4,7 @@
 [color]
 	ui = auto
 [core]
-	editor = vi
+	editor = vim
 	excludesfile = /home/bgeltz/.gitignore
 	pager = less -r -F -X
 [alias]
