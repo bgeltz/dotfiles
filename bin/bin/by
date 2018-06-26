@@ -1,0 +1,13 @@
+#!/bin/bash
+
+if [ $# -ne 1 ]; then
+    byobu
+    exit 1
+fi
+
+# Screen
+#byobu -d -R -S $1 -t $1
+
+#Tmux
+byobu new -A -s $1 -n $1
+
