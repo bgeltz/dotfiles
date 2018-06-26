@@ -24,14 +24,43 @@ if [ -n "${MAKE_CLEAN}" ]; then
     rm -fr ${GEOPM_PATH}
 fi
 
+MIC_FLAG='-xmic-avx512'
+
+export CC="cc ${MIC_FLAG} -dynamic"
+export CXX="CC ${MIC_FLAG} -dynamic"
+export FC='ftn'
+export F77='ftn'
+export MPICC=$CC
+export MPICXX=$CXX
+export FCFLAGS="${MIC_FLAG} -dynamic"
+export FFLAGS="${MIC_FLAG} -dynamic"
+
+if [ ! -z ${DARSHAN_PRELOAD} ]; then
+    echo "Error: Darshan was detected in your environment and is known to conflict with GEOPM."
+    echo "Run \"module unload darshan\"."
+    exit 1
+fi
+
 if [ -n "${FORCE_DEFAULTS}" ]; then
+    # module swap PrgEnv-intel PrgEnv-gnu
+    if [ "${PE_ENV}" != "GNU" ]; then
+        echo "Error: You need to load the GNU environment."
+        echo "Run \"module swap PrgEnv-intel PrgEnv-gnu\"."
+        exit 1
+    fi
     ./autogen.sh
     ./configure --prefix=${GEOPM_PATH} ${TEST_FLAGS}
 fi
 
 if [ -n "${FORCE_INTEL}" ]; then
+    # module swap PrgEnv-gnu PrgEnv-intel
+    if [ "${PE_ENV}" != "INTEL" ]; then
+        echo "Error: You need to load the INTEL environment."
+        echo "Run \"module swap PrgEnv-gnu PrgEnv-intel\"."
+        exit 1
+    fi
     ./autogen.sh
-    CC=icc CXX=icpc FC=ifort F77=ifort ./configure --prefix=${GEOPM_PATH} ${TEST_FLAGS}
+    ./configure --prefix=${GEOPM_PATH} ${TEST_FLAGS}
 fi
 
 make -j${PROCS}
@@ -41,3 +70,4 @@ if [ -n "${RUN_TESTS}" ]; then
     make -j${PROCS} checkprogs
     make check
 fi
+
