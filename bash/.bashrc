@@ -109,15 +109,18 @@ esac
 #   sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
-export GIT_PROXY_COMMAND=/usr/bin/socks-gw
-export PATH="${HOME}/bin:${HOME}/build/geopm/bin:${HOME}/build/msr-tools/bin:${PATH}"
+export PATH=\
+"${HOME}/bin:"\
+"${HOME}/.local/bin:"\
+"${HOME}/build/geopm/bin:"\
+"${HOME}/build/msr-tools/bin:"\
+"${PATH}"
+
+export PYTHONPATH=\
+"${PYTHONPATH}:"\
+"${HOME}/build/geopm/lib/python2.7/site-packages"
+
 export HISTTIMEFORMAT="%m/%d/%y %T "
-#export USE_CCACHE=1
-#export CCACHE_DIR=/mnt/ssd/ccache
-#export ANDROID_CONSOLE=serial
-#export TERM=xterm-256color
-#export TERM=screen-256color
-export PYTHONPATH=${PYTHONPATH}:${HOME}/build/geopm/lib/python2.7/site-packages
 export EDITOR=vi
 export CATALINA_HOME=/usr/share/tomcat7
 export OPENGROK_TOMCAT_BASE=$CATALINA_HOME
@@ -126,6 +129,12 @@ export GOPATH="$HOME/workspace"
 unset GNOME_KEYRING_CONTROL
 unset PROMPT_COMMAND
 export TZ="/usr/share/zoneinfo/US/Pacific"
+#export GIT_PROXY_COMMAND=/usr/bin/socks-gw
+#export USE_CCACHE=1
+#export CCACHE_DIR=/mnt/ssd/ccache
+#export ANDROID_CONSOLE=serial
+#export TERM=xterm-256color
+#export TERM=screen-256color
 
 stty erase '^?'
 #ulimit -n 8192
