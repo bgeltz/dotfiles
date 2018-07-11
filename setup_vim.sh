@@ -36,7 +36,8 @@ git clone https://github.com/scrooloose/nerdcommenter.git
 git clone https://github.com/luochen1990/rainbow.git
 git clone https://github.com/bgeltz/vim-fugitive.git
 git clone https://github.com/airblade/vim-gitgutter.git
+vim -u NONE -c "helptags vim-fugitive/doc" -c q
 popd
 
 stow vim
-vim -u NONE -c "helptags vim-fugitive/doc" -c q
+

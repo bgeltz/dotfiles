@@ -7,10 +7,6 @@ alias aptI="sudo apt-get install"
 alias aptS="apt-cache search"
 alias aptR="sudo apt-get remove"
 
-# Build environment setup
-alias s='module purge && module load gnu mvapich2 autotools'
-alias si='module purge && module load intel mvapich2 autotools'
-
 # Git related aliases
 # Name of the current branch, or empty if there isn't one.
 _current_branch_pretty ()

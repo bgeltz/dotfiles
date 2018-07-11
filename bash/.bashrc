@@ -11,7 +11,7 @@ if [ -f /etc/bashrc ]; then
 	. /etc/bashrc
 fi
 
-# Source pricate definitions
+# Source private definitions
 if [ -f ~/.bashrc-private ]; then
     . ~/.bashrc-private
 fi
@@ -114,7 +114,12 @@ export PATH=\
 "${HOME}/.local/bin:"\
 "${HOME}/build/geopm/bin:"\
 "${HOME}/build/msr-tools/bin:"\
+"${HOME}/build/msr-safe/bin:"\
 "${PATH}"
+
+export LD_LIBRARY_PATH=\
+"${HOME}/build/geopm/lib:"\
+"${LD_LIBRARY_PATH}"
 
 export PYTHONPATH=\
 "${PYTHONPATH}:"\
