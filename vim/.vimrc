@@ -14,6 +14,8 @@ set foldnestmax=10      "deepest fold is 10 levels
 set nofoldenable        "dont fold by default
 set foldlevel=1         "this is just what i use
 set updatetime=1250
+set splitbelow
+set splitright
 let g:gitgutter_terminal_reports_focus=0
 
 " Uncomment the following blocks to enable Ctrl-J HexMode

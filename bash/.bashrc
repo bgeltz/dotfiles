@@ -142,6 +142,7 @@ export TZ="/usr/share/zoneinfo/US/Pacific"
 #export TERM=screen-256color
 
 stty erase '^?'
+stty -ixon
 #ulimit -n 8192
 fortune
 
