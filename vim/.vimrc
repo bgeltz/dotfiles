@@ -18,6 +18,8 @@ set splitbelow
 set splitright
 let g:gitgutter_terminal_reports_focus=0
 
+:command W noa w
+
 " Uncomment the following blocks to enable Ctrl-J HexMode
 " nnoremap <C-J> :Hexmode<CR>
 " inoremap <C-J> <Esc>:Hexmode<CR>

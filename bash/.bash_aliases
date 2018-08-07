@@ -89,6 +89,7 @@ fi
 alias ll='ls -lF'
 alias la='ls -AF'
 alias l='ls -CLF'
+alias lsd='ls -latrd'
 
 # some more ls aliases
 # https://unix.stackexchange.com/a/111639
