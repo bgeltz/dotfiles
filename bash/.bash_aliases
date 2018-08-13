@@ -51,6 +51,14 @@ ppfd(){
     fi
 }
 
+upd(){
+    if [ -n "$(_current_branch)" ]; then
+        git reset --hard bgeltz-public/$(_current_branch)
+    else
+        echo "Not on a git branch."
+    fi
+}
+
 alias dev_review="git push origin HEAD:refs/for/dev%${EMAILS}"
 alias gs='git status'
 alias gd='git diff'
