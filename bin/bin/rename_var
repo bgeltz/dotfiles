@@ -1,0 +1,9 @@
+#!/bin/bash
+
+FROM=${1}
+TO=${2}
+
+echo "Renaming ${FROM} to ${TO}..."
+
+ag -G \(hpp\|cpp\|Makefile*\) --files-with-matches ${FROM} | xargs sed -ri -e "s/${FROM}/${TO}/g"
+

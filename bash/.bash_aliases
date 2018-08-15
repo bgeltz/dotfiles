@@ -59,6 +59,7 @@ upd(){
     fi
 }
 
+# Git aliases
 alias dev_review="git push origin HEAD:refs/for/dev%${EMAILS}"
 alias gs='git status'
 alias gd='git diff'
@@ -81,6 +82,7 @@ alias rsy='repo sync -j5'
 alias rst='repo status -j`nproc`'
 alias beep='echo -en "\007"'
 alias vi='vim'
+alias disk_usage='du -sch -- * | sort -hr | head -n 11'
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
