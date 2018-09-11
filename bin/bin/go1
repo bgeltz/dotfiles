@@ -4,19 +4,19 @@ set -e
 # set -x
 
 PROCS=9
-#TEST_FLAGS='--enable-debug --enable-coverage --disable-fortran'
-#TEST_FLAGS='--enable-debug --disable-fortran'
 TEST_FLAGS=''
 TEST_FLAGS+=' --enable-debug'
-# TEST_FLAGS+=' --enable-fortran'
+# TEST_FLAGS+=' --enable-overhead'
 # TEST_FLAGS+=' --disable-fortran'
 # TEST_FLAGS+=' --disable-doc'
 # TEST_FLAGS+=' --enable-coverage'
 
 GEOPM_PATH=${BIN_PATH}/geopm
 
-if [ ! -d "${GEOPM_PATH}" ]; then
-    mkdir -p ${GEOPM_PATH}
+if [ -n "${MAKE_CLEAN}" ]; then
+    make clean
+    rm -f VERSION
+    rm -fr ${GEOPM_PATH}
 fi
 
 if [ -n "${FORCE_DEFAULTS}" ]; then
@@ -27,11 +27,6 @@ fi
 if [ -n "${FORCE_INTEL}" ]; then
     ./autogen.sh
     CC=icc CXX=icpc FC=ifort F77=ifort ./configure --prefix=${GEOPM_PATH} ${TEST_FLAGS}
-fi
-
-if [ -n "${MAKE_CLEAN}" ]; then
-    make clean
-    rm -fr ${BIN_PATH}/geopm
 fi
 
 make -j${PROCS}
