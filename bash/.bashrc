@@ -147,7 +147,7 @@ export TZ="/usr/share/zoneinfo/US/Pacific"
 stty erase '^?'
 stty -ixon
 #ulimit -n 8192
-fortune
+# fortune
 
 # added by travis gem
 [ -f /home/bgeltz/.travis/travis.sh ] && source /home/bgeltz/.travis/travis.sh
