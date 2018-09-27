@@ -14,7 +14,7 @@ TEST_FLAGS+=' --enable-debug'
 GEOPM_PATH=${BIN_PATH}/geopm
 
 if [ -n "${MAKE_CLEAN}" ]; then
-    make clean
+    make clean || git clean -fdx
     rm -f VERSION
     rm -fr ${GEOPM_PATH}
 fi
