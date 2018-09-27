@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -e
-# set -x
+set -x
 
 PROCS=9
 TEST_FLAGS=''
@@ -24,7 +24,8 @@ if [ -n "${MAKE_CLEAN}" ]; then
     rm -fr ${GEOPM_PATH}
 fi
 
-MIC_FLAG='-xmic-avx512'
+# MIC_FLAG='-xmic-avx512'
+MIC_FLAG='-xCORE-AVX2'
 
 export CC="cc ${MIC_FLAG} -dynamic"
 export CXX="CC ${MIC_FLAG} -dynamic"
@@ -67,6 +68,10 @@ make -j${PROCS}
 make install
 
 if [ -n "${RUN_TESTS}" ]; then
+<<<<<<< HEAD
+=======
+    # TODO : If debug is off this will take hours.
+>>>>>>> Misc updates.
     make -j${PROCS} checkprogs
     make check
 fi
