@@ -17,7 +17,7 @@ set updatetime=1250
 set splitbelow
 set splitright
 let g:gitgutter_terminal_reports_focus=0
-
+nnoremap <CR> :noh<CR><CR>
 :command W noa w
 
 " Uncomment the following blocks to enable Ctrl-J HexMode
@@ -103,7 +103,7 @@ let g:rainbow_conf = {
     \   }
     \}
 
-" Triger `autoread` when files changes on disk
+" Trigger `autoread` when files changes on disk
 " https://unix.stackexchange.com/questions/149209/refresh-changed-content-of-file-opened-in-vim/383044#383044
 " https://vi.stackexchange.com/questions/13692/prevent-focusgained-autocmd-running-in-command-line-editing-mode
 autocmd FocusGained,BufEnter,CursorHold,CursorHoldI * if mode() != 'c' | checktime | endif
