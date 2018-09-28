@@ -112,15 +112,15 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 export PATH=\
 "${HOME}/bin:"\
 "${HOME}/.local/bin:"\
-"${HOME}/build/geopm/bin:"\
 "${HOME}/build/msr-tools/bin:"\
 "${HOME}/build/msr-safe/bin:"\
 "${HOME}/build/git/bin:"\
-"${PATH}"
+"${PATH}"\
+"${HOME}/build/geopm/bin"
 
 export LD_LIBRARY_PATH=\
-"${HOME}/build/geopm/lib:"\
-"${LD_LIBRARY_PATH}"
+"${LD_LIBRARY_PATH}:"\
+"${HOME}/build/geopm/lib:"
 
 export PYTHONPATH=\
 "${PYTHONPATH}:"\
