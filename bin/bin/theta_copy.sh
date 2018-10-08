@@ -2,4 +2,4 @@
 
 set -x
 
-rsync -avhe ssh --progress theta:/projects/intel/geopm-home/shared/output/${1} .
+rsync -avhe ssh --progress theta:${1} .

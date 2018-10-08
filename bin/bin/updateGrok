@@ -18,7 +18,6 @@ update(){
 update BGELTZ-DEV-github-bgeltz-geopm bgeltz-dev
 update DEV-gerrithub-geopm dev true
 update DEV-github-geopm dev
-update KONTROLLER bgeltz-balancer
 
 cd /opt/opengrok-0.12.1/bin
 ./OpenGrok index
