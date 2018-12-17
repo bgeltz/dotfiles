@@ -24,17 +24,18 @@ if [ -n "${MAKE_CLEAN}" ]; then
     rm -fr ${GEOPM_PATH}
 fi
 
-# MIC_FLAG='-xmic-avx512'
-MIC_FLAG='-xCORE-AVX2'
+MIC_FLAG='-xmic-avx512'
+# MIC_FLAG='-xCORE-AVX2'
 
-export CC="cc ${MIC_FLAG} -dynamic"
-export CXX="CC ${MIC_FLAG} -dynamic"
+export CC="cc -dynamic"
+export CXX="CC -dynamic"
+export CFLAGS="-dynamic"
 export FC='ftn'
 export F77='ftn'
-export MPICC=$CC
-export MPICXX=$CXX
-export FCFLAGS="${MIC_FLAG} -dynamic"
-export FFLAGS="${MIC_FLAG} -dynamic"
+export MPICC="cc -dynamic"
+export MPICXX="CC -dynamic"
+export FCFLAGS="-dynamic"
+export FFLAGS="-dynamic"
 
 if [ ! -z ${DARSHAN_PRELOAD} ]; then
     echo "Error: Darshan was detected in your environment and is known to conflict with GEOPM."
@@ -68,10 +69,6 @@ make -j${PROCS}
 make install
 
 if [ -n "${RUN_TESTS}" ]; then
-<<<<<<< HEAD
-=======
-    # TODO : If debug is off this will take hours.
->>>>>>> Misc updates.
     make -j${PROCS} checkprogs
     make check
 fi
