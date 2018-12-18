@@ -24,18 +24,19 @@ if [ -n "${MAKE_CLEAN}" ]; then
     rm -fr ${GEOPM_PATH}
 fi
 
-MIC_FLAG='-xmic-avx512'
-# MIC_FLAG='-xCORE-AVX2'
+# MIC_FLAG='-xmic-avx512'
+MIC_FLAG='-xCORE-AVX2' # Must use this otherwise configure error about cross compiling
 
 export CC="cc -dynamic"
 export CXX="CC -dynamic"
-export CFLAGS="-dynamic"
+export CFLAGS="${MIC_FLAG}"
+export CXXFLAGS="${MIC_FLAG}"
 export FC='ftn'
 export F77='ftn'
 export MPICC="cc -dynamic"
 export MPICXX="CC -dynamic"
-export FCFLAGS="-dynamic"
-export FFLAGS="-dynamic"
+export FCFLAGS="-dynamic ${MIC_FLAG}"
+export FFLAGS="-dynamic ${MIC_FLAG}"
 
 if [ ! -z ${DARSHAN_PRELOAD} ]; then
     echo "Error: Darshan was detected in your environment and is known to conflict with GEOPM."
