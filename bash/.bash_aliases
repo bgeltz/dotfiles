@@ -27,6 +27,10 @@ delete_branch(){
     git push bgeltz-public --delete ${1}
 }
 
+glg(){
+    git lg -${1-10} ${2}
+}
+
 pp(){
     if [ -n "$(_current_branch)" ]; then
         git push bgeltz-public $(_current_branch)
@@ -60,9 +64,9 @@ upd(){
 }
 
 # Git aliases
-alias dev_review="git push origin HEAD:refs/for/dev%${EMAILS}"
 alias gs='git status'
 alias gd='git diff'
+alias gdc='git diff --cached'
 alias glist='for ref in $(git for-each-ref --sort=-committerdate --format="%(refname)" refs/heads/ refs/remotes ); do git log -n1 $ref --pretty=format:"%Cgreen%cr%Creset %C(yellow)%d%Creset %C(bold blue)<%an>%Creset%n" | cat ; done | awk '"'! a["'$0'"]++' | head -n 20"
 alias githist="git for-each-ref --sort=-committerdate refs/heads/ refs/remotes/ --format='%(HEAD) %(color:red)%(objectname:short)%(color:reset)|%(color:yellow)%(refname:short)%(color:reset)|%(contents:subject)|%(authorname) (%(color:green)%(committerdate:relative)%(color:reset))' | column -ts'|'"
 alias save="git commit -a --amend --no-edit"
@@ -74,7 +78,7 @@ h2d(){
 d2h(){
   echo "obase=16; $@"|bc
 }
-alias b='google-chrome --new-window'
+alias b='google-chrome --new-window 2>&1 /dev/null &'
 alias c='pygmentize -g'
 alias h='c /home/bgeltz/Documents/git_notes.txt'
 alias ayfi='repo forall -c "git reset -q --hard HEAD && git clean -qfd" -j9'
