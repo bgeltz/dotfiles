@@ -9,15 +9,17 @@ update(){
     git reset --hard origin/${2}
 
     if [ "${3}" == 'true' ] ; then
-        ./autogen.sh && ./configure && make doxygen
-        cp -R dox/html /var/www/html/dox
         git clean -fdx
+        ./autogen.sh && ./configure && make doxygen
     fi
 }
 
-update BGELTZ-DEV-github-bgeltz-geopm bgeltz-dev
-update DEV-gerrithub-geopm dev true
-update DEV-github-geopm dev
+#update geopm dev
+update geopm dev true
 
-cd /opt/opengrok-0.12.1/bin
-./OpenGrok index
+opengrok-indexer -J=-Djava.util.logging.config.file=/var/opengrok/logging.properties \
+    -a /var/opengrok/dist/lib/opengrok.jar -- \
+    -c /home/brad/build/uctags/bin/ctags \
+    -s /var/opengrok/src -d /var/opengrok/data -H -P -S -G \
+    -W /var/opengrok/etc/configuration.xml -U http://localhost:8080/source
+
