@@ -43,7 +43,7 @@ while getopts "hcdit" opt; do
     esac
 done
 
-if [ ! -d "${BIN_PATH}" ]; then
+if [ ! -d "${BIN_PATH}/build_logs" ]; then
     mkdir -p ${BIN_PATH}/build_logs
 fi
 
