@@ -127,8 +127,6 @@ export PYTHONPATH=\
 
 export HISTTIMEFORMAT="%m/%d/%y %T "
 export EDITOR=vi
-export CATALINA_HOME=/usr/share/tomcat7
-export OPENGROK_TOMCAT_BASE=$CATALINA_HOME
 export SRC_ROOT=${HOME}/git/geopm
 export GOPATH="$HOME/workspace"
 unset GNOME_KEYRING_CONTROL
