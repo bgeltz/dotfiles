@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # Apt related aliases
-alias aptU="sudo apt-get update"
-alias aptD="sudo apt-get dist-upgrade"
-alias aptI="sudo apt-get install"
-alias aptS="apt-cache search"
-alias aptR="sudo apt-get remove"
+alias aptU="sudo apt update"
+alias aptD="sudo apt dist-upgrade"
+alias aptI="sudo apt install"
+alias aptS="apt search"
+alias aptR="sudo apt remove"
 
 # Git related aliases
 # Name of the current branch, or empty if there isn't one.
