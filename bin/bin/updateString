@@ -1,0 +1,9 @@
+#!/bin/bash
+
+OLD_STRING="Copyright (c) 2015, 2016, 2017, 2018, Intel Corporation"
+NEW_STRING="Copyright (c) 2015, 2016, 2017, 2018, 2019 Intel Corporation"
+
+echo -e "Updating:\n\tOLD: ${OLD_STRING}\n\tNEW: ${NEW_STRING}\n"
+
+grep -rl "${OLD_STRING}" | xargs sed -i -e "s/${OLD_STRING}/${NEW_STRING}/g"
+
