@@ -5,21 +5,24 @@ set -e
 
 update(){
     cd /var/opengrok/src/${1}
+    git clean -fdx
     git fetch --all
     git reset --hard origin/${2}
-
-    if [ "${3}" == 'true' ] ; then
-        git clean -fdx
-        ./autogen.sh && ./configure && make doxygen
-    fi
 }
 
-#update geopm dev
-update geopm dev true
+generate_dox(){
+    cd /var/opengrok/src/${1}
+    ./autogen.sh && ./configure && make doxygen
+}
 
+update geopm dev
+
+# Index every project under /var/opengrok/src
 opengrok-indexer -J=-Djava.util.logging.config.file=/var/opengrok/logging.properties \
     -a /var/opengrok/dist/lib/opengrok.jar -- \
     -c /home/brad/build/uctags/bin/ctags \
     -s /var/opengrok/src -d /var/opengrok/data -H -P -S -G \
     -W /var/opengrok/etc/configuration.xml -U http://localhost:8080/source
+
+generate_dox geopm
 
