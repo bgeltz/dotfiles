@@ -16,9 +16,10 @@ _current_branch_pretty ()
 }
 
 EMAILS='r=christopher.m.cantalupo@intel.com,r=diana.r.guttman@intel.com,r=brandon.baker@intel.com'
+PUSH_OPTIONS='publish-comments'
 review(){
-    echo "git push origin ${1}:refs/for/dev%${EMAILS}"
-    git push origin ${1}:refs/for/dev%${EMAILS}
+    echo "git push origin ${1}:refs/for/dev%${PUSH_OPTIONS},${EMAILS}"
+    git push origin ${1}:refs/for/dev%${PUSH_OPTIONS},${EMAILS}
 }
 
 delete_branch(){
