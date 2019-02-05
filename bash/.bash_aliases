@@ -15,7 +15,7 @@ _current_branch_pretty ()
     echo ${b:+(${b})}
 }
 
-EMAILS='r=christopher.m.cantalupo@intel.com,r=diana.r.guttman@intel.com,r=brandon.baker@intel.com'
+EMAILS='r=christopher.m.cantalupo@intel.com,r=diana.r.guttman@intel.com,r=brandon.baker@intel.com,r=ali.mohammad@intel.com'
 PUSH_OPTIONS='publish-comments'
 review(){
     echo "git push origin ${1}:refs/for/dev%${PUSH_OPTIONS},${EMAILS}"
