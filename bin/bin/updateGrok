@@ -13,9 +13,13 @@ update(){
 generate_dox(){
     cd /var/opengrok/src/${1}
     ./autogen.sh && ./configure && make doxygen
+    rm -fr /home/brad/public_html/dox*
+    mv dox dox-public /home/brad/public_html
+    git clean -fdx
 }
 
 update geopm dev
+generate_dox geopm
 
 # Index every project under /var/opengrok/src
 opengrok-indexer -J=-Djava.util.logging.config.file=/var/opengrok/logging.properties \
@@ -23,6 +27,4 @@ opengrok-indexer -J=-Djava.util.logging.config.file=/var/opengrok/logging.proper
     -c /home/brad/build/uctags/bin/ctags \
     -s /var/opengrok/src -d /var/opengrok/data -H -P -S -G \
     -W /var/opengrok/etc/configuration.xml -U http://localhost:8080/source
-
-generate_dox geopm
 
