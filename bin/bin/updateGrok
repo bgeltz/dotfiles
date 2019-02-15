@@ -23,6 +23,7 @@ update theta-tutorial master
 update msr-safe master
 update ohpc_current obs/OpenHPC_1.3.6_Factory
 update ohpc_next obs/OpenHPC_1.3.7_Factory
+update slurm master
 
 generate_dox geopm
 
