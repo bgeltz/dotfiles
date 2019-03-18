@@ -24,6 +24,7 @@ update msr-safe master
 update ohpc_current obs/OpenHPC_1.3.6_Factory
 update ohpc_next obs/OpenHPC_1.3.7_Factory
 update slurm master
+update HACC_v1.5_Theta master
 
 generate_dox geopm
 
