@@ -10,6 +10,7 @@ TEST_FLAGS=''
 # TEST_FLAGS+=' --disable-fortran'
 # TEST_FLAGS+=' --disable-doc'
 # TEST_FLAGS+=' --enable-coverage'
+TEST_FLAGS+=' --enable-ompt' # Do not enable until the OMPT integration tests works with IMPI.
 
 GEOPM_PATH=${BIN_PATH}/geopm
 
@@ -19,7 +20,12 @@ if [ -n "${MAKE_CLEAN}" ]; then
     rm -fr ${GEOPM_PATH}
 fi
 
+if [ -n "${FORCE_DEBUG}" ]; then
+    TEST_FLAGS+=' --enable-debug'
+fi
+
 if [ -n "${FORCE_DEFAULTS}" ]; then
+    TEST_FLAGS+=' --enable-coverage'
     ./autogen.sh
     ./configure --prefix=${GEOPM_PATH} ${TEST_FLAGS}
 fi
@@ -30,7 +36,7 @@ if [ -n "${FORCE_INTEL}" ]; then
 fi
 
 make -j${PROCS}
-make install
+# make install # Moved this to build_and_run.sh so that when running for coverage, the in-tree binaries are used.
 
 if [ -n "${RUN_TESTS}" ]; then
     make -j${PROCS} checkprogs

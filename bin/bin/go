@@ -18,7 +18,7 @@ EOF
 TIMESTAMP=$(date +%F_%H%M.%S)
 export BIN_PATH=${HOME}/build
 
-while getopts "hcdit" opt; do
+while getopts "hcditg" opt; do
     case $opt in
         h)
             usage
@@ -36,6 +36,9 @@ while getopts "hcdit" opt; do
         t)
             export RUN_TESTS=1
             ;;
+        g)
+            export FORCE_DEBUG=1
+            ;;
         \?)
             usage
             exit
@@ -48,4 +51,5 @@ if [ ! -d "${BIN_PATH}/build_logs" ]; then
 fi
 
 ln -sf ${BIN_PATH}/build_logs/build.${TIMESTAMP}.log ${BIN_PATH}/build_latest.log
-script -ec go1 ${BIN_PATH}/build_logs/build.${TIMESTAMP}.log
+# script -ec go1 ${BIN_PATH}/build_logs/build.${TIMESTAMP}.log
+echo $(script -ec go1 ${BIN_PATH}/build_logs/build.${TIMESTAMP}.log)
