@@ -5,7 +5,7 @@ set -e
 
 PROCS=9
 TEST_FLAGS=''
-TEST_FLAGS+=' --enable-debug'
+# TEST_FLAGS+=' --enable-debug'
 # TEST_FLAGS+=' --enable-overhead'
 # TEST_FLAGS+=' --disable-fortran'
 # TEST_FLAGS+=' --disable-doc'
@@ -14,7 +14,7 @@ TEST_FLAGS+=' --enable-debug'
 GEOPM_PATH=${BIN_PATH}/geopm
 
 if [ -n "${MAKE_CLEAN}" ]; then
-    make clean || git clean -fdx
+    git clean -fdx
     rm -f VERSION
     rm -fr ${GEOPM_PATH}
 fi
@@ -31,8 +31,8 @@ fi
 
 make -j${PROCS}
 make install
-make -j${PROCS} checkprogs
 
 if [ -n "${RUN_TESTS}" ]; then
+    make -j${PROCS} checkprogs
     make check
 fi
