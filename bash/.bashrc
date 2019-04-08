@@ -126,7 +126,7 @@ export PYTHONPATH=\
 "${HOME}/build/geopm/lib/python2.7/site-packages"
 
 export HISTTIMEFORMAT="%m/%d/%y %T "
-export EDITOR=vi
+export EDITOR=vim
 export SRC_ROOT=${HOME}/git/geopm
 export GOPATH="$HOME/workspace"
 unset GNOME_KEYRING_CONTROL
