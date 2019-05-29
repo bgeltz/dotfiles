@@ -1,0 +1,75 @@
+#!/bin/bash
+
+set -e
+set -x
+
+PROCS=9
+TEST_FLAGS=''
+# TEST_FLAGS+='--enable-debug '
+# TEST_FLAGS+='--disable-procfs '
+# TEST_FLAGS+='--enable-overhead '
+# TEST_FLAGS+='--disable-fortran '
+TEST_FLAGS+='--disable-doc '
+# TEST_FLAGS+='--enable-coverage '
+# TEST_FLAGS+='--with-hwloc=${BIN_PATH}/hwloc '
+# TEST_FLAGS+='--with-json=${BIN_PATH}/json-c '
+
+GEOPM_PATH=${BIN_PATH}/geopm_brg
+
+if [ -n "${MAKE_CLEAN}" ]; then
+    git clean -fdx
+    rm -f VERSION
+    rm -fr ${GEOPM_PATH}
+fi
+
+# MIC_FLAG='-xmic-avx512'
+MIC_FLAG='-xCORE-AVX2' # Must use this otherwise configure error about cross compiling
+
+export CC="cc -dynamic"
+export CXX="CC -dynamic"
+export CFLAGS="${MIC_FLAG}"
+export CXXFLAGS="${MIC_FLAG}"
+export FC='ftn'
+export F77='ftn'
+export MPICC="cc -dynamic"
+export MPICXX="CC -dynamic"
+export FCFLAGS="-dynamic ${MIC_FLAG}"
+export FFLAGS="-dynamic ${MIC_FLAG}"
+
+if [ ! -z ${DARSHAN_PRELOAD} ]; then
+    echo "Error: Darshan was detected in your environment and is known to conflict with GEOPM."
+    echo "Run \"module unload darshan\"."
+    exit 1
+fi
+
+if [ -n "${FORCE_DEFAULTS}" ]; then
+    # module swap PrgEnv-intel PrgEnv-gnu
+    if [ "${PE_ENV}" != "GNU" ]; then
+        echo "Error: You need to load the GNU environment."
+        echo "Run \"module swap PrgEnv-intel PrgEnv-gnu\"."
+        exit 1
+    fi
+    ./autogen.sh
+    ./configure --prefix=${GEOPM_PATH} ${TEST_FLAGS}
+fi
+
+if [ -n "${FORCE_INTEL}" ]; then
+    # module swap PrgEnv-gnu PrgEnv-intel
+    if [ "${PE_ENV}" != "INTEL" ]; then
+        echo "Error: You need to load the INTEL environment."
+        echo "Run \"module swap PrgEnv-gnu PrgEnv-intel\"."
+        exit 1
+    fi
+    ./autogen.sh
+    ./configure --prefix=${GEOPM_PATH} ${TEST_FLAGS}
+fi
+
+make -j${PROCS}
+make install
+
+if [ -n "${RUN_TESTS}" ]; then
+    # TODO : If debug is off this will take hours.
+    make -j${PROCS} checkprogs
+    make check
+fi
+
