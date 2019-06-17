@@ -41,6 +41,21 @@ glg(){
     git lg -${1-10} ${2}
 }
 
+ghist(){
+    # https://stackoverflow.com/a/18767922
+    git branch -vv --color=always | while read; do
+        # The underscore is because the active branch is preceded by a '*', and
+        # for awk I need the columns to line up. The perl call is to strip out
+        # ansi colors; if you don't pass --color=always above you can skip this
+        local branch=$(echo "_$REPLY" | awk '{print $2}' | perl -pe 's/\e\[?.*?[\@-~]//g')
+        # git log fails when you pass a detached head as a branch name.
+        # Hide the error and get the date of the current head.
+        local branch_modified=$(git log -1 --format=%ci "$branch" 2> /dev/null || git log -1 --format=%ci)
+        echo -e "$branch_modified $REPLY"
+    # cut strips the time and timezone columns, leaving only the date
+    done | sort -r | cut -d ' ' -f -1,4-
+}
+
 pp(){
     if [ -n "$(_current_branch)" ]; then
         git push bgeltz-public $(_current_branch)
