@@ -27,7 +27,6 @@ cherrypick_wrapper(){
 
 cherrypick(){
     # USAGE: cherrypick_wrapper <GERRITHUB_PATCH_ID>
-    cherrypick_wrapper 450062 # WIP : RAPL lock bit ignore.
     cherrypick_wrapper 451397 # WIP : Stop integration tests from littering files.
 }
 
