@@ -41,7 +41,7 @@ mkdir -p ${TEST_DIR}
 
 echo "Starting integration test run..."
 
-module purge && module load intel mvapich2 autotools
+module purge && module load intel mvapich2 autotools cmake
 
 cd ${GEOPM_PATH}
 git fetch --all
@@ -104,7 +104,7 @@ TEST_DIR=${HOME}/public_html/coverage_runs/${TIMESTAMP}
 mkdir -p ${TEST_DIR}
 
 # GNU Toolchain - Runs unit tests, then integration tests, then generates coverage report
-module purge && module load gnu7 mvapich2 autotools
+module purge && module load gnu7 mvapich2 autotools cmake
 export LD_LIBRARY_PATH=${GEOPM_PATH}/openmp/lib:${LD_LIBRARY_PATH}
 
 cd ${GEOPM_PATH}
@@ -154,10 +154,12 @@ FILES=\
 "*log " \
 "*out " \
 
+set -x
 for f in $(ls -I "*h5" ${FILES});
 do
     cp -p --parents ${f} ${TEST_DIR}
 done
+set +x
 
 # End nightly coverage report generation
 ########################################
