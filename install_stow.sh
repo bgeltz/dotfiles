@@ -2,17 +2,19 @@
 
 set -e
 
+MIRROR=https://mirrors.kernel.org/gnu/stow
 DOWNLOAD_DIR=${HOME}/downloads
-ARCHIVE=stow-2.2.2.tar.gz
+STOW_VERSION=stow-2.3.1
+ARCHIVE=${STOW_VERSION}.tar.gz
 
 if [ ! -d "${DOWNLOAD_DIR}" ]; then
     mkdir -p ${DOWNLOAD_DIR}
 fi
 
 pushd ${DOWNLOAD_DIR}
-wget http://ftp.gnu.org/gnu/stow/${ARCHIVE}
+wget ${MIRROR}/${ARCHIVE}
 tar zxvf ${ARCHIVE}
-cd stow-2.2.2
+cd ${STOW_VERSION}
 ./configure --prefix=${HOME}/build/stow
 make -j9
 make install
