@@ -28,12 +28,11 @@ cherrypick_wrapper(){
 cherrypick(){
     # USAGE: cherrypick_wrapper <GERRITHUB_PATCH_ID>
     cherrypick_wrapper 451397 # WIP : Stop integration tests from littering files.
-    cherrypick_wrapper 466635 # Fix power_balancer integration test
 }
 
 ##############################
 # Nightly test run
-TIMESTAMP=$(date +\%F_\%H\%M)
+export TIMESTAMP=$(date +\%F_\%H\%M)
 TEST_DIR=${HOME}/public_html/cron_runs/${TIMESTAMP}
 LOG_FILE=test_output.log
 
@@ -50,10 +49,10 @@ git clean -fdx
 cherrypick
 
 # Intel Toolchain (debug build for unit tests)
-${HOME}/bin/go -ictg > >(tee -a ${TEST_DIR}/build_${LOG_FILE}) 2>&1
+${HOME}/bin/go -ictgq
 RC=$?
 if [ ${RC} -ne 0 ]; then
-    ERR_MSG="Running 'make' or 'make check' with the Intel toolchain failed.  Please see the output for more information:\n${TEST_OUTPUT_URL}/cron_runs/${TIMESTAMP}"
+    ERR_MSG="Running 'make' or 'make check' with the Intel toolchain failed.  Please see the output for more information:\n${TEST_OUTPUT_URL}/build_logs/build.${TIMESTAMP}.log"
 
     echo -e ${ERR_MSG} | mail -r "do-not-reply" -s "Integration test failure : ${TIMESTAMP}" ${MAILING_LIST}
 
@@ -91,6 +90,8 @@ if [ -f ${TEST_DIR}/.tests_failed ]; then
 
     echo "Email sent."
     # exit 1 # Since the integration tests are failing because of the cherrypick(), do not exit.
+else
+    echo -e "The integration tests have passed."  | mail -r "do-not-reply" -s "Integration test pass : ${TIMESTAMP}" ${MAILING_LIST}
 fi
 
 # End test run
@@ -160,6 +161,8 @@ do
     cp -p --parents ${f} ${TEST_DIR}
 done
 set +x
+
+echo -e "The converage report is ready."  | mail -r "do-not-reply" -s "Coverage report ready : ${TIMESTAMP}" ${MAILING_LIST}
 
 # End nightly coverage report generation
 ########################################
