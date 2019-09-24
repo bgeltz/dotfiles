@@ -45,11 +45,11 @@ module purge && module load intel mvapich2 autotools cmake
 cd ${GEOPM_PATH}
 git fetch --all
 git reset --hard origin/dev
-git clean -fdx
+git clean -fdx --quiet
 cherrypick
 
 # Intel Toolchain (debug build for unit tests)
-${HOME}/bin/go -ictgq
+go -ictg > ${TEST_DIR}/intel_debug_build_${LOG_FILE} 2>&1
 RC=$?
 if [ ${RC} -ne 0 ]; then
     ERR_MSG="Running 'make' or 'make check' with the Intel toolchain failed.  Please see the output for more information:\n${TEST_OUTPUT_URL}/build_logs/build.${TIMESTAMP}.log"
@@ -61,7 +61,8 @@ if [ ${RC} -ne 0 ]; then
 fi
 
 # Intel Toolchain (release build for integration tests)
-${HOME}/bin/go -ic > >(tee -a ${TEST_DIR}/build_${LOG_FILE}) 2>&1
+unset TIMESTAMP
+go -ic > ${TEST_DIR}/intel_release_build_${LOG_FILE} 2>&1
 make install
 
 # Runs the integration tests 10 times
@@ -111,10 +112,10 @@ export LD_LIBRARY_PATH=${GEOPM_PATH}/openmp/lib:${LD_LIBRARY_PATH}
 cd ${GEOPM_PATH}
 git fetch --all
 git reset --hard origin/dev
-git clean -fdx
+git clean -fdx --quiet
 cherrypick
 
-go -dc > >(tee -a build_${LOG_FILE}) 2>&1
+go -dc > gnu_release_build_${LOG_FILE} 2>&1
 
 # Initial / baseline lcov
 lcov --capture --initial --directory src --directory test --output-file base_coverage.info --no-external > >(tee -a coverage_${LOG_FILE}) 2>&1
