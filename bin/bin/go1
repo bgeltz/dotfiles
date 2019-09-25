@@ -31,6 +31,7 @@ fi
 
 if [ -n "${FORCE_INTEL}" ]; then
     ./autogen.sh
+    export CPATH=${MKL_INCDIR}:${MKL_F90_INC}:${CPATH}
     CC=icc CXX=icpc FC=ifort F77=ifort ./configure --prefix=${GEOPM_PATH} ${TEST_FLAGS}
 fi
 
