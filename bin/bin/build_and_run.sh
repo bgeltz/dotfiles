@@ -28,6 +28,8 @@ cherrypick_wrapper(){
 cherrypick(){
     # USAGE: cherrypick_wrapper <GERRITHUB_PATCH_ID>
     cherrypick_wrapper 451397 # WIP : Stop integration tests from littering files.
+    cherrypick_wrapper 469476 # Add msr save and restore calls to launcher
+    cherrypick_wrapper 465715 # Update integration test looper to use module
 }
 
 ##############################
