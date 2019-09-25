@@ -57,7 +57,6 @@ if [ ${RC} -ne 0 ]; then
     echo -e ${ERR_MSG} | mail -r "do-not-reply" -s "Integration test failure : ${TIMESTAMP}" ${MAILING_LIST}
 
     echo "Email sent."
-    exit 1
 fi
 
 # Intel Toolchain (release build for integration tests)
