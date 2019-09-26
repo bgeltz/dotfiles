@@ -62,7 +62,7 @@ if [ ${RC} -ne 0 ]; then
 fi
 
 # Intel Toolchain (release build for integration tests)
-unset TIMESTAMP
+export TIMESTAMP=$(date +\%F_\%H\%M)
 go -ic > ${TEST_DIR}/intel_release_build_${LOG_FILE} 2>&1
 make install
 
@@ -86,7 +86,7 @@ popd
 
 # Send mail if there was a test failure.
 if [ -f ${TEST_DIR}/.tests_failed ]; then
-    ERR_MSG="The integration tests have failed.  Please see the output for more information:\nhttp://mcfly.ra.intel.com/~test/cron_runs/${TIMESTAMP}"
+    ERR_MSG="The integration tests have failed.  Please see the output for more information:\n${TEST_OUTPUT_URL}/cron_runs/${TIMESTAMP}"
 
     echo -e ${ERR_MSG} | mail -r "do-not-reply" -s "Integration test failure : ${TIMESTAMP}" ${MAILING_LIST}
 
@@ -101,7 +101,7 @@ fi
 
 ####################################
 # Nightly coverage report generation
-TIMESTAMP=$(date +\%F_\%H\%M)
+export TIMESTAMP=$(date +\%F_\%H\%M)
 TEST_DIR=${HOME}/public_html/coverage_runs/${TIMESTAMP}
 
 mkdir -p ${TEST_DIR}
@@ -164,7 +164,8 @@ do
 done
 set +x
 
-echo -e "The converage report is ready."  | mail -r "do-not-reply" -s "Coverage report ready : ${TIMESTAMP}" ${MAILING_LIST}
+RDY_MSG="The coverage report is ready.\n${TEST_OUTPUT_URL}/coverage_runs/${TIMESTAMP}"
+echo -e ${RDY_MSG}  | mail -r "do-not-reply" -s "Coverage report ready : ${TIMESTAMP}" ${MAILING_LIST}
 
 # End nightly coverage report generation
 ########################################
