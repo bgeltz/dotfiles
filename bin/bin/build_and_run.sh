@@ -151,11 +151,11 @@ cp -rp --parents test/fortran/fortran_links ${TEST_DIR}
 FILES=\
 "test_integration/*log "\
 "test_integration/*report "\
-"test_integration/*trace-* " \
-"test_integration/*config " \
-"*info " \
-"*log " \
-"*out " \
+"test_integration/*trace-* "\
+"test_integration/*config "\
+"*info "\
+"*log "\
+"*out "\
 
 set -x
 for f in $(ls -I "*h5" ${FILES});
@@ -164,7 +164,7 @@ do
 done
 set +x
 
-RDY_MSG="The coverage report is ready.\n${TEST_OUTPUT_URL}/coverage_runs/${TIMESTAMP}"
+RDY_MSG="The coverage report is ready:\n${TEST_OUTPUT_URL}/coverage_runs/${TIMESTAMP}/coverage\n\nAdditional data available in parent directory."
 echo -e ${RDY_MSG}  | mail -r "do-not-reply" -s "Coverage report ready : ${TIMESTAMP}" ${MAILING_LIST}
 
 # End nightly coverage report generation
