@@ -115,6 +115,7 @@ export PATH=\
 "${HOME}/build/geopm/bin:"\
 "${HOME}/build/msr-tools/bin:"\
 "${HOME}/build/msr-safe/bin:"\
+"${HOME}/build/git/bin:"\
 "${PATH}"
 
 export LD_LIBRARY_PATH=\

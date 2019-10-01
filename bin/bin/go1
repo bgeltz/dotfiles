@@ -9,8 +9,12 @@ TEST_FLAGS+=' --enable-debug'
 TEST_FLAGS+=' --with-python=python2'
 # TEST_FLAGS+=' --enable-overhead'
 # TEST_FLAGS+=' --disable-fortran'
+# TEST_FLAGS+=' --disable-mpi'
+# TEST_FLAGS+=' --disable-openmp'
 # TEST_FLAGS+=' --disable-doc'
 # TEST_FLAGS+=' --enable-coverage'
+# TEST_FLAGS+=' --enable-ompt'
+TEST_FLAGS+=' --enable-beta'
 
 GEOPM_PATH=${BIN_PATH}/geopm
 
