@@ -60,7 +60,6 @@ if [ ${RC} -ne 0 ]; then
 fi
 
 # Intel Toolchain (release build for integration tests)
-export TIMESTAMP=$(date +\%F_\%H\%M)
 go -ic > ${TEST_DIR}/intel_release_build_${LOG_FILE} 2>&1
 make install
 
@@ -84,7 +83,7 @@ popd
 
 # Send mail if there was a test failure.
 if [ -f ${TEST_DIR}/.tests_failed ]; then
-    ERR_MSG="The integration tests have failed.  Please see the output for more information:\n${TEST_OUTPUT_URL}/cron_runs/${TIMESTAMP}"
+    ERR_MSG="The integration tests have failed.  Please see the output for more information:\n${TEST_OUTPUT_URL}/cron_runs/${TIMESTAMP}/test_loop_output.log\n\nAdditional information here:\n${TEST_OUTPUT_URL}/cron_runs/${TIMESTAMP}"
 
     echo -e ${ERR_MSG} | mail -r "do-not-reply" -s "Integration test failure : ${TIMESTAMP}" ${MAILING_LIST}
 
