@@ -9,5 +9,5 @@ fi
 #byobu -d -R -S $1 -t $1
 
 #Tmux
-byobu new -A -s $1 -n $1
+byobu new -D -A -s $1 -n $1
 
