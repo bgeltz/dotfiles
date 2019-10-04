@@ -52,8 +52,8 @@ cherrypick
 rm -fr ${HOME}/.local
 curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py > ${TEST_DIR}/pip.log 2>&1
 python get-pip.py --user > ${TEST_DIR}/pip.log 2>&1
-pip install --user --upgrade pip > ${TEST_DIR}/pip.log 2>&1
-pip install --user --upgrade -r scripts/requirements.txt > ${TEST_DIR}/pip.log 2>&1
+pip install --user --ignore-installed --upgrade pip > ${TEST_DIR}/pip.log 2>&1
+pip install --user --ignore-installed --upgrade -r scripts/requirements.txt > ${TEST_DIR}/pip.log 2>&1
 
 # Intel Toolchain (debug build for unit tests)
 go -ictg > ${TEST_DIR}/intel_debug_build_${LOG_FILE} 2>&1
