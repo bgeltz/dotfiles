@@ -67,6 +67,7 @@ if [ ${RC} -ne 0 ]; then
 fi
 
 # Intel Toolchain (release build for integration tests)
+git clean -fdx --quiet
 go -ic > ${TEST_DIR}/intel_release_build_${LOG_FILE} 2>&1
 make install
 
