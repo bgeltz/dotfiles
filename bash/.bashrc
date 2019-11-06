@@ -140,10 +140,10 @@ export TZ="/usr/share/zoneinfo/US/Pacific"
 #export TERM=xterm-256color
 #export TERM=screen-256color
 
-stty erase '^?'
-stty -ixon
+# stty erase '^?'
+# stty -ixon
 #ulimit -n 8192
-fortune
+# fortune
 
 # added by travis gem
 [ -f /home/bgeltz/.travis/travis.sh ] && source /home/bgeltz/.travis/travis.sh
