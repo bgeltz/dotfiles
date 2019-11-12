@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # HOST=theta
-HOST=supermucng
+# HOST=supermucng
 
 set -x
-rsync -avhe ssh --progress ${HOST}:${1} .
+echo "rsync -avhe ssh --progress ${1}:${2} ."
+rsync -avhe ssh --progress ${1}:${2} .
