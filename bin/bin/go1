@@ -5,8 +5,7 @@ set -e
 
 PROCS=9
 TEST_FLAGS=''
-TEST_FLAGS+=' --enable-debug'
-TEST_FLAGS+=' --with-python=python2'
+# TEST_FLAGS+=' --enable-debug'
 # TEST_FLAGS+=' --enable-overhead'
 # TEST_FLAGS+=' --disable-fortran'
 # TEST_FLAGS+=' --disable-mpi'
@@ -15,6 +14,8 @@ TEST_FLAGS+=' --with-python=python2'
 # TEST_FLAGS+=' --enable-coverage'
 # TEST_FLAGS+=' --enable-ompt'
 TEST_FLAGS+=' --enable-beta'
+TEST_FLAGS+=' --with-python=python2'
+# TEST_FLAGS+=' --enable-bloat'
 
 GEOPM_PATH=${BIN_PATH}/geopm
 
