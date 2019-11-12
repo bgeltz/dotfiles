@@ -126,6 +126,10 @@ export PYTHONPATH=\
 "${PYTHONPATH}:"\
 "${HOME}/build/geopm/lib/python2.7/site-packages"
 
+export MANPATH=\
+"${MANPATH}:"\
+"${HOME}/build/geopm/share/man"
+
 export HISTTIMEFORMAT="%m/%d/%y %T "
 export EDITOR=vim
 export SRC_ROOT=${HOME}/git/geopm
