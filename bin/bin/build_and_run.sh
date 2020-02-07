@@ -27,10 +27,26 @@ cherrypick_wrapper(){
 
 cherrypick(){
     # USAGE: cherrypick_wrapper <GERRITHUB_PATCH_ID>
-    cherrypick_wrapper 451397 # WIP : Stop integration tests from littering files.
     cherrypick_wrapper 470775 # Preserve report when test fails
-    cherrypick_wrapper 470866 # Fixup msrsave/restore
-    cherrypick_wrapper 475800 # WIP: Use GEOPM_KEEP_FILES with nightlies
+    return
+}
+
+reset_pr(){
+    2>/dev/null git checkout -b pr-test
+    git reset --hard origin/dev
+}
+
+get_pr(){
+    git fetch -f origin pull/${1}/head:pr-${1}
+    git checkout pr-${1}
+    git rebase pr-test
+    git checkout pr-test
+    git reset --hard pr-${1}
+}
+
+get_pull_requests(){
+    # USAGE: get_pr <GITHUB_PR_NUMBER>
+    return
 }
 
 ##############################
@@ -47,8 +63,9 @@ module purge && module load intel mvapich2 autotools cmake
 
 cd ${GEOPM_PATH}
 git fetch --all
-git reset --hard origin/dev
+reset_pr
 git clean -fdx --quiet
+get_pull_requests
 cherrypick
 
 # Download required python dependencies
@@ -121,8 +138,9 @@ export LD_LIBRARY_PATH=${GEOPM_PATH}/openmp/lib:${LD_LIBRARY_PATH}
 
 cd ${GEOPM_PATH}
 git fetch --all
-git reset --hard origin/dev
+reset_pr
 git clean -fdx --quiet
+get_pull_requests
 cherrypick
 
 go -dc > gnu_release_build_${LOG_FILE} 2>&1
