@@ -30,6 +30,7 @@ cherrypick(){
     cherrypick_wrapper 451397 # WIP : Stop integration tests from littering files.
     cherrypick_wrapper 470775 # Preserve report when test fails
     cherrypick_wrapper 470866 # Fixup msrsave/restore
+    cherrypick_wrapper 475800 # WIP: Use GEOPM_KEEP_FILES with nightlies
 }
 
 ##############################
