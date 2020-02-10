@@ -116,7 +116,8 @@ export PATH=\
 "${HOME}/build/msr-tools/bin:"\
 "${HOME}/build/msr-safe/bin:"\
 "${HOME}/build/git/bin:"\
-"/usr/lib/ccache:"\
+"${HOME}/build/byobu/bin:"\
+"${HOME}/build/tmux/bin:"\
 "${PATH}"
 
 export LD_LIBRARY_PATH=\
