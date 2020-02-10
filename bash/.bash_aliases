@@ -89,6 +89,28 @@ upd(){
     fi
 }
 
+update(){
+    if [ -n "$(_current_branch)" ]; then
+        git fetch origin
+        git rebase origin/dev
+    else
+        echo "Not on a git branch."
+    fi
+}
+
+reset_pr(){
+    2>/dev/null git checkout -b pr-test
+    git reset --hard origin/dev
+}
+
+get_pr(){
+    git fetch -f origin pull/${1}/head:pr-${1}
+    git checkout pr-${1}
+    git rebase pr-test
+    git checkout pr-test
+    git reset --hard pr-${1}
+}
+
 # Git aliases
 alias gs='git status'
 alias gd='git diff'
