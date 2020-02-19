@@ -111,15 +111,24 @@ done
 popd
 
 # Send mail if there was a test failure.
+OUTPUT_LOG=cron_runs/${TIMESTAMP}/test_loop_output.log
+TEST_OUTPUT_LOG=${TEST_OUTPUT_URL}/${OUTPUT_LOG}
 if [ -f ${TEST_DIR}/.tests_failed ]; then
-    ERR_MSG="The integration tests have failed.  Please see the output for more information:\n${TEST_OUTPUT_URL}/cron_runs/${TIMESTAMP}/test_loop_output.log\n\nAdditional information here:\n${TEST_OUTPUT_URL}/cron_runs/${TIMESTAMP}"
+    ERR_MSG="The integration tests have failed.  Please see the output for more information:\n${TEST_OUTPUT_LOG}\n\nAdditional information here:\n${TEST_OUTPUT_URL}/cron_runs/${TIMESTAMP}"
 
     echo -e ${ERR_MSG} | mail -r "do-not-reply" -s "Integration test failure : ${TIMESTAMP}" ${MAILING_LIST}
 
     echo "Email sent."
     # exit 1 # Since the integration tests are failing because of the cherrypick(), do not exit.
 else
-    echo -e "The integration tests have passed."  | mail -r "do-not-reply" -s "Integration test pass : ${TIMESTAMP}" ${MAILING_LIST}
+    # Get skipped tests
+    LOCAL_LOG=~/public_html/${OUTPUT_LOG}
+    INT_9_LINE=$(grep -n skipped= ${LOCAL_LOG} | tail -n 2 | head -n 1 | cut -d: -f1)
+    INT_9_LINE=$(( ${INT_9_LINE} + 1 ))
+    SKIPPED_TESTS=$(tail -n +${INT_9_LINE} ${LOCAL_LOG} | grep skipped)
+    # End get skipped
+    ERR_MSG="The integration tests have PASSED! :).  Please see the output for more information:\n${TEST_OUTPUT_LOG}\n\nAdditional information here:\n${TEST_OUTPUT_URL}/cron_runs/${TIMESTAMP}\n\nSkipped tests:\n\n${SKIPPED_TESTS}\n"
+    echo -e "${ERR_MSG}" | mail -r "do-not-reply" -s "Integration test PASS : ${TIMESTAMP}" ${MAILING_LIST}
 fi
 
 # End test run
