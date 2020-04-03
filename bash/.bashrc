@@ -126,7 +126,8 @@ export LD_LIBRARY_PATH=\
 
 export PYTHONPATH=\
 "${PYTHONPATH}:"\
-"${HOME}/build/geopm/lib/python3.6/site-packages"
+"${HOME}/build/geopm/lib/python2.7/site-packages:"\
+"${HOME}/shared/lib/python2.7/site-packages"
 
 export MANPATH=\
 "${MANPATH}:"\
