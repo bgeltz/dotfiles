@@ -22,14 +22,14 @@ review(){
     EMAILS+="r=ali.mohammad@intel.com,"
     EMAILS+="r=daniel1.wilson@intel.com" # NOTE THE COMMA ABOVE!
     PUSH_OPTIONS='ready,publish-comments'
-    echo "git push origin ${1}:refs/for/dev%${PUSH_OPTIONS},${EMAILS}"
-    git push origin ${1}:refs/for/dev%${PUSH_OPTIONS},${EMAILS}
+    echo "git push gerrithub ${1}:refs/for/dev%${PUSH_OPTIONS},${EMAILS}"
+    git push gerrithub ${1}:refs/for/dev%${PUSH_OPTIONS},${EMAILS}
 }
 
 review_wip(){
     PUSH_OPTIONS='wip,publish-comments'
-    echo "git push origin ${1}:refs/for/dev%${PUSH_OPTIONS}"
-    git push origin ${1}:refs/for/dev%${PUSH_OPTIONS}
+    echo "git push gerrithub ${1}:refs/for/dev%${PUSH_OPTIONS}"
+    git push gerrithub ${1}:refs/for/dev%${PUSH_OPTIONS}
 }
 
 delete_branch(){
