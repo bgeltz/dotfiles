@@ -6,7 +6,7 @@ set -e
 PROCS=9
 TEST_FLAGS=''
 TEST_FLAGS+=' --enable-debug'
-TEST_FLAGS+=' --with-python=python2'
+# TEST_FLAGS+=' --with-python=python2'
 # TEST_FLAGS+=' --enable-overhead'
 # TEST_FLAGS+=' --disable-fortran'
 # TEST_FLAGS+=' --disable-mpi'
