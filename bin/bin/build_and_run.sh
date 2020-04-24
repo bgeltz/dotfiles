@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -x
+
 MAILING_LIST=${MAILING_LIST}
 GEOPM_PATH=${HOME}/geopm
 
@@ -27,7 +29,7 @@ cherrypick_wrapper(){
 
 cherrypick(){
     # USAGE: cherrypick_wrapper <GERRITHUB_PATCH_ID>
-    cherrypick_wrapper 470775 # Preserve report when test fails
+    # cherrypick_wrapper 470775 # Preserve report when test fails
     return
 }
 
@@ -66,7 +68,7 @@ git fetch --all
 reset_pr
 git clean -fdx --quiet
 get_pull_requests
-cherrypick
+# cherrypick # BRG : Suspect this is hanging in the middle of the night and causing weird stuff downstream.
 
 # Download required python dependencies
 rm -fr ${HOME}/.local
@@ -90,6 +92,7 @@ fi
 # Intel Toolchain (release build for integration tests)
 git clean -fdx --quiet
 go -ic > ${TEST_DIR}/intel_release_build_${LOG_FILE} 2>&1
+./test_integration/test_tutorial_base.sh > test_tutorial_base_${LOG_FILE} 2>&1
 make install
 
 # Runs the integration tests 10 times
@@ -131,6 +134,7 @@ else
     echo -e "${ERR_MSG}" | mail -r "do-not-reply" -s "Integration test PASS : ${TIMESTAMP}" ${MAILING_LIST}
 fi
 
+# exit 1
 # End test run
 #############################
 
@@ -150,7 +154,7 @@ git fetch --all
 reset_pr
 git clean -fdx --quiet
 get_pull_requests
-cherrypick
+# cherrypick
 
 go -dc > gnu_release_build_${LOG_FILE} 2>&1
 

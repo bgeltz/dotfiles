@@ -2,7 +2,7 @@
 #SBATCH --mail-type=ALL
 #SBATCH -N 4
 #SBATCH --export=ALL
-#SBATCH -t 08:00:00
+#SBATCH -t 12:00:00
 
 LOG_FILE=test_output.log
 GEOPM_PATH=${HOME}/geopm
