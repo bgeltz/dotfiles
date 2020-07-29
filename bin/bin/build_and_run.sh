@@ -92,21 +92,21 @@ fi
 # Intel Toolchain (release build for integration tests)
 git clean -fdx --quiet
 go -ic > ${TEST_DIR}/intel_release_build_${LOG_FILE} 2>&1
-./test_integration/test_tutorial_base.sh > test_tutorial_base_${LOG_FILE} 2>&1
+./integration/test/test_tutorial_base.sh > test_tutorial_base_${LOG_FILE} 2>&1
 make install
 
 # Runs the integration tests 10 times
 sbatch integration_batch.sh intel loop
 # FIXME Make this launch resiliant to the script timing out
 echo "Integration tests launched via sbatch.  Sleeping..."
-while [ ! -f ${GEOPM_PATH}/test_integration/.tests_complete ]; do
+while [ ! -f ${GEOPM_PATH}/integration/test/.tests_complete ]; do
     sleep 5
 done
 echo "Integration tests complete."
 
 # Move the files into the TEST_DIR
 echo "Moving files to ${TEST_DIR}..."
-pushd test_integration
+pushd integration/test
 for f in $(ls -I "*h5" *log *report *trace-* *config .??*);
 do
     mv ${f} ${TEST_DIR}
@@ -164,7 +164,7 @@ lcov --capture --initial --directory src --directory test --output-file base_cov
 # Run integration tests
 sbatch integration_batch.sh gnu once
 echo "Integration tests launched via sbatch.  Sleeping..."
-while [ ! -f ${GEOPM_PATH}/test_integration/.tests_complete ]; do
+while [ ! -f ${GEOPM_PATH}/integration/test/.tests_complete ]; do
     sleep 5
 done
 echo "Integration tests complete."
@@ -189,10 +189,10 @@ cp -rp --parents test/gtest_links ${TEST_DIR}
 cp -rp --parents test/fortran/fortran_links ${TEST_DIR}
 
 FILES=\
-"test_integration/*log "\
-"test_integration/*report "\
-"test_integration/*trace-* "\
-"test_integration/*config "\
+"integration/test/*log "\
+"integration/test/*report "\
+"integration/test/*trace-* "\
+"integration/test/*config "\
 "*info "\
 "*log "\
 "*out "\

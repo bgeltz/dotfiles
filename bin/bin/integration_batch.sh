@@ -24,7 +24,7 @@ export GEOPM_PLUGIN_PATH=${GEOPM_PATH}/.libs
 #export LD_LIBRARY_PATH=/opt/ohpc/pub/compiler/gcc/5.3.0/lib64:${GEOPM_PATH}/.libs:${LD_LIBRARY_PATH}
 export LD_LIBRARY_PATH=${GEOPM_PATH}/.libs:${LD_LIBRARY_PATH}
 
-pushd ${GEOPM_PATH}/test_integration
+pushd ${GEOPM_PATH}/integration/test
 
 if [ "${2}" == "once" ]; then
     GEOPM_RUN_LONG_TESTS=true ./geopm_test_integration.py -v > >(tee -a integration_${LOG_FILE}) 2>&1
