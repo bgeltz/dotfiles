@@ -61,7 +61,7 @@ mkdir -p ${TEST_DIR}
 
 echo "Starting integration test run..."
 
-module purge && module load intel mvapich2 autotools cmake
+module purge && module load intel mvapich2 autotools cmake ccache
 
 cd ${GEOPM_PATH}
 git fetch --all
@@ -146,7 +146,7 @@ TEST_DIR=${HOME}/public_html/coverage_runs/${TIMESTAMP}
 mkdir -p ${TEST_DIR}
 
 # GNU Toolchain - Runs unit tests, then integration tests, then generates coverage report
-module purge && module load gnu7 mvapich2 autotools cmake
+module purge && module load gnu7 mvapich2 autotools cmake ccache
 export LD_LIBRARY_PATH=${GEOPM_PATH}/openmp/lib:${LD_LIBRARY_PATH}
 
 cd ${GEOPM_PATH}
@@ -156,7 +156,7 @@ git clean -fdx --quiet
 get_pull_requests
 # cherrypick
 
-go -dc > gnu_release_build_${LOG_FILE} 2>&1
+go -dc > ${TEST_DIR}/gnu_release_build_${LOG_FILE} 2>&1
 
 # Initial / baseline lcov
 lcov --capture --initial --directory src --directory test --output-file base_coverage.info --no-external > >(tee -a coverage_${LOG_FILE}) 2>&1
