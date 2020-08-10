@@ -7,6 +7,7 @@ update(){
     cd /var/opengrok/src/${1}
     git clean -fdx
     git fetch --all
+    git checkout ${2}
     git reset --hard origin/${2}
 }
 
@@ -20,7 +21,7 @@ generate_dox(){
 
 update geopm dev
 update theta-tutorial master
-update msr-safe master
+update msr-safe main
 update ohpc_current obs/OpenHPC_1.3.6_Factory
 update ohpc_next obs/OpenHPC_1.3.7_Factory
 update slurm master
