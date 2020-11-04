@@ -24,3 +24,5 @@
     autosetuprebase = always
     # Setup git checkout -b $branch to always track the current branch
     autosetupmerge = always
+[rebase]
+	autosquash = true
