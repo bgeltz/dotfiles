@@ -57,7 +57,7 @@ ghist(){
     done | sort -r | cut -d ' ' -f -1,4-
 }
 
-pp(){
+ppub(){
     if [ -n "$(_current_branch)" ]; then
         git push bgeltz-public $(_current_branch)
     else
@@ -65,7 +65,15 @@ pp(){
     fi
 }
 
-ppf(){
+ppriv(){
+    if [ -n "$(_current_branch)" ]; then
+        git push bgeltz-private $(_current_branch)
+    else
+        echo "Not on a git branch."
+    fi
+}
+
+ppubf(){
     if [ -n "$(_current_branch)" ]; then
         git push -f bgeltz-public $(_current_branch)
     else
@@ -73,7 +81,15 @@ ppf(){
     fi
 }
 
-ppfd(){
+pprivf(){
+    if [ -n "$(_current_branch)" ]; then
+        git push -f bgeltz-private $(_current_branch)
+    else
+        echo "Not on a git branch."
+    fi
+}
+
+ppubfd(){
     if [ -n "$(_current_branch)" ]; then
         git push -f bgeltz-public $(_current_branch):bgeltz-dev
     else
@@ -123,12 +139,16 @@ alias save="git commit -a --amend --no-edit"
 h2d(){
   echo "ibase=16; $@"|bc
 }
+
 d2h(){
   echo "obase=16; $@"|bc
 }
+
+copy_logs(){
+    TIMESTAMP=$(date +%F_%H%M); mkdir ~/public_html/misc_logs/${TIMESTAMP} && cp ${1} ~/public_html/misc_logs/${TIMESTAMP}
+}
+
 alias b='google-chrome --new-window 2>&1 /dev/null &'
-alias c='pygmentize -g'
-alias h='c /home/bgeltz/Documents/git_notes.txt'
 alias ayfi='repo forall -c "git reset -q --hard HEAD && git clean -qfd" -j9'
 alias rsy='repo sync -j5'
 alias rst='repo status -j`nproc`'
@@ -170,14 +190,4 @@ mll() (
   fi
   (($#)) && exec ls --color=auto  -h --group-directories-first -ldU -- "$@"
 )
-
-# Cluster aliases
-scancel_cleanup(){
-    /usr/bin/scancel -s TERM ${1} && sleep 3 && /usr/bin/scancel ${1}
-}
-alias scancel=scancel_cleanup
-
-copy_logs(){
-    TIMESTAMP=$(date +%F_%H%M); mkdir ~/public_html/misc_logs/${TIMESTAMP} && cp ${1} ~/public_html/misc_logs/${TIMESTAMP}
-}
 
