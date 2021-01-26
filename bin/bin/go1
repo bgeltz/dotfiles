@@ -13,7 +13,7 @@ TEST_FLAGS=''
 # TEST_FLAGS+=' --disable-doc'
 # TEST_FLAGS+=' --enable-coverage'
 # TEST_FLAGS+=' --enable-ompt'
-TEST_FLAGS+=' --with-python=python2'
+# TEST_FLAGS+=' --with-python=python2'
 TEST_FLAGS+=' --enable-bloat'
 
 GEOPM_PATH=${BIN_PATH}/geopm

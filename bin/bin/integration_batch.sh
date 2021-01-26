@@ -27,7 +27,7 @@ export LD_LIBRARY_PATH=${GEOPM_PATH}/.libs:${LD_LIBRARY_PATH}
 pushd ${GEOPM_PATH}/integration/test
 
 if [ "${2}" == "once" ]; then
-    GEOPM_RUN_LONG_TESTS=true ./geopm_test_integration.py -v > >(tee -a integration_${LOG_FILE}) 2>&1
+    GEOPM_RUN_LONG_TESTS=true python3 ./geopm_test_integration.py -v > >(tee -a integration_${LOG_FILE}) 2>&1
 elif [ "${2}" == "loop" ]; then
     ./geopm_test_loop.sh
 else
