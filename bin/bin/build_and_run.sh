@@ -86,6 +86,8 @@ if [ ${RC} -ne 0 ]; then
 
     echo -e ${ERR_MSG} | mail -r "do-not-reply" -s "Integration test failure : ${TIMESTAMP}" ${MAILING_LIST}
 
+    notify.sh "Integration test failure : ${TIMESTAMP}" "${ERR_MSG}"
+
     echo "Email sent."
 fi
 
@@ -121,6 +123,8 @@ if [ -f ${TEST_DIR}/.tests_failed ]; then
 
     echo -e ${ERR_MSG} | mail -r "do-not-reply" -s "Integration test failure : ${TIMESTAMP}" ${MAILING_LIST}
 
+    notify.sh "Integration test failure : ${TIMESTAMP}" "${ERR_MSG}"
+
     echo "Email sent."
     # exit 1 # Since the integration tests are failing because of the cherrypick(), do not exit.
 else
@@ -130,8 +134,18 @@ else
     INT_9_LINE=$(( ${INT_9_LINE} + 1 ))
     SKIPPED_TESTS=$(tail -n +${INT_9_LINE} ${LOCAL_LOG} | grep skipped)
     # End get skipped
+
     ERR_MSG="The integration tests have PASSED! :).  Please see the output for more information:\n${TEST_OUTPUT_LOG}\n\nAdditional information here:\n${TEST_OUTPUT_URL}/cron_runs/${TIMESTAMP}\n\nSkipped tests:\n\n${SKIPPED_TESTS}\n"
     echo -e "${ERR_MSG}" | mail -r "do-not-reply" -s "Integration test PASS : ${TIMESTAMP}" ${MAILING_LIST}
+
+    # Remove ' and " from SKIPPED_TESTS
+    SKIPPED_TESTS=${SKIPPED_TESTS//\'/}
+    SKIPPED_TESTS=${SKIPPED_TESTS//\"/}
+    # Reformat ERR_MSG with Slack markup
+    ERR_MSG="The integration tests have PASSED! :).  Please see the output for more information:\n${TEST_OUTPUT_LOG}\n\nAdditional information here:\n${TEST_OUTPUT_URL}/cron_runs/${TIMESTAMP}\n\nSkipped tests:\n\n\`\`\`${SKIPPED_TESTS}\`\`\`\n"
+    notify.sh "Integration test PASS : ${TIMESTAMP}" "${ERR_MSG}"
+
+    echo "PASS email sent."
 fi
 
 # exit 1
@@ -206,6 +220,7 @@ set +x
 
 RDY_MSG="The coverage report is ready:\n${TEST_OUTPUT_URL}/coverage_runs/${TIMESTAMP}/coverage\n\nAdditional data available in parent directory."
 echo -e ${RDY_MSG}  | mail -r "do-not-reply" -s "Coverage report ready : ${TIMESTAMP}" ${MAILING_LIST}
+notify.sh "Code coverage : ${TIMESTAMP}" "${RDY_MSG}"
 
 # End nightly coverage report generation
 ########################################
