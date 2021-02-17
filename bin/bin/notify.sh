@@ -3,9 +3,10 @@
 TITLE="$1"
 MSG="$2"
 
-if [ -z ${PUSHBULLET_API_KEY+x} ]; then
-    echo "Error: PUSHBULLET_API_KEY not set in environment!"
+if [ -z ${SLACK_HOOK+x} ]; then
+    echo "Error: SLACK_HOOK not set in environment!"
     exit 0
 fi
 
-curl -u ${PUSHBULLET_API_KEY}: https://api.pushbullet.com/v2/pushes -d type=note -d title="${TITLE}" -d body="${MSG}" > /dev/null
+curl -X POST -H 'Content-type: application/json' --data "{'text':'*${1}*: ${2}'}" ${SLACK_HOOK}
+
