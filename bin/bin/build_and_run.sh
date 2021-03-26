@@ -94,7 +94,7 @@ fi
 # Intel Toolchain (release build for integration tests)
 git clean -fdx --quiet
 go -ic > ${TEST_DIR}/intel_release_build_${LOG_FILE} 2>&1
-./integration/test/test_tutorial_base.sh > test_tutorial_base_${LOG_FILE} 2>&1
+./integration/test/test_tutorial_base.sh > ${TEST_DIR}/test_tutorial_base_${LOG_FILE} 2>&1
 make install
 
 # Runs the integration tests 10 times
