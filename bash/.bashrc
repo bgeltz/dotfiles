@@ -112,7 +112,6 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 export PATH=\
 "${HOME}/bin:"\
 "${HOME}/.local/bin:"\
-"${HOME}/build/geopm/bin:"\
 "${HOME}/build/msr-tools/bin:"\
 "${HOME}/build/msr-safe/bin:"\
 "${HOME}/build/git/bin:"\
@@ -120,21 +119,8 @@ export PATH=\
 "${HOME}/build/tmux/bin:"\
 "${PATH}"
 
-export LD_LIBRARY_PATH=\
-"${HOME}/build/geopm/lib:"\
-"${LD_LIBRARY_PATH}"
-
-export PYTHONPATH=\
-"${PYTHONPATH}:"\
-"${HOME}/build/geopm/lib/python3.6/site-packages"
-
-export MANPATH=\
-"${MANPATH}:"\
-"${HOME}/build/geopm/share/man"
-
 export HISTTIMEFORMAT="%m/%d/%y %T "
 export EDITOR=vim
-export SRC_ROOT=${HOME}/git/geopm
 export GOPATH="$HOME/workspace"
 unset GNOME_KEYRING_CONTROL
 unset PROMPT_COMMAND
@@ -153,3 +139,4 @@ fortune
 
 # added by travis gem
 [ -f /home/bgeltz/.travis/travis.sh ] && source /home/bgeltz/.travis/travis.sh
+
