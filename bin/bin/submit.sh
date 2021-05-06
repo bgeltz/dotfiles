@@ -17,7 +17,8 @@ until [ -f ${JOB_LOG} ]; do sleep 2; done
 tail -f ${JOB_LOG} 2> /dev/null &
 
 # Backup current job script
-OUTPUT_DIR=$(ls -d ${HOME}/output/${JOBID}* | head -n1)
+until [ -d ${HOME}/output/*${JOBID}**/ ]; do sleep 2; done
+OUTPUT_DIR=$(ls -d ${HOME}/output/*${JOBID}**/ | head -n1)
 cp ${1} ${OUTPUT_DIR}
 
 while squeue -u ${USER} | grep ${JOBID} &> /dev/null; do sleep 5; done
