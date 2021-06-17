@@ -28,17 +28,12 @@ if [ -n "${FORCE_DEBUG}" ]; then
     TEST_FLAGS+=' --enable-debug'
 fi
 
-if [ -n "${FORCE_DEFAULTS}" ]; then
+if [ -n "${RUN_COVERAGE}" ]; then
     TEST_FLAGS+=' --enable-coverage'
-    ./autogen.sh
-    ./configure --prefix=${GEOPM_PATH} ${TEST_FLAGS}
 fi
 
-if [ -n "${FORCE_INTEL}" ]; then
-    ./autogen.sh
-    CC=icc CXX=icpc FC=ifort F77=ifort ./configure --prefix=${GEOPM_PATH} ${TEST_FLAGS}
-fi
-
+./autogen.sh
+./configure --prefix=${GEOPM_PATH} ${TEST_FLAGS}
 make -j${PROCS}
 # make install # Moved this to build_and_run.sh so that when running for coverage, the in-tree binaries are used.
 

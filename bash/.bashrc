@@ -106,7 +106,6 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 export PATH=\
 "${HOME}/bin:"\
 "${HOME}/.local/bin:"\
-"${HOME}/build/geopm/bin:"\
 "${HOME}/build/msr-tools/bin:"\
 "${HOME}/build/msr-safe/bin:"\
 "${HOME}/build/git/bin:"\
@@ -114,9 +113,8 @@ export PATH=\
 "${HOME}/build/tmux/bin:"\
 "${PATH}"
 
-export LD_LIBRARY_PATH=\
-"${HOME}/build/geopm/lib:"\
-"${LD_LIBRARY_PATH}"
+# export LD_LIBRARY_PATH=\
+# "${LD_LIBRARY_PATH}"
 
 export HISTTIMEFORMAT="%m/%d/%y %T "
 export EDITOR=vim
@@ -135,7 +133,4 @@ export TZ="/usr/share/zoneinfo/US/Pacific"
 # stty erase '^?'
 # stty -ixon
 #ulimit -n 8192
-# fortune
 
-# added by travis gem
-[ -f /home/bgeltz/.travis/travis.sh ] && source /home/bgeltz/.travis/travis.sh

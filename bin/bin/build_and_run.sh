@@ -1,37 +1,8 @@
-#!/bin/bash
+#!/bin/bash -l
 
 set -x
 
 MAILING_LIST=${MAILING_LIST}
-GEOPM_PATH=${HOME}/geopm
-
-echo "MAILING_LIST is ${MAILING_LIST}"
-
-find_latest_change () {
-  local remote=$1
-  local review=$2
-
-  git ls-remote $remote | grep -E "refs/changes/[[:digit:]]+/${review}/" | sort -t / -k 5 -g | tail -n1 | awk '{print $2}'
-}
-
-cherrypick_wrapper(){
-    # https://git-scm.com/book/en/v2/Git-Internals-Environment-Variables
-    export GIT_HTTP_LOW_SPEED_TIME=600
-    local remote=https://review.gerrithub.io/geopm/geopm
-
-    # Use the following template for cherrypicking
-    # Example : Killing a legacy.
-    # Example : git fetch ${remote} $(find_latest_change ${remote} 409755) && git cherry-pick FETCH_HEAD
-    git fetch ${remote} $(find_latest_change ${remote} ${1}) && git cherry-pick FETCH_HEAD
-
-    return
-}
-
-cherrypick(){
-    # USAGE: cherrypick_wrapper <GERRITHUB_PATCH_ID>
-    # cherrypick_wrapper 470775 # Preserve report when test fails
-    return
-}
 
 reset_pr(){
     2>/dev/null git checkout -b pr-test
@@ -48,6 +19,7 @@ get_pr(){
 
 get_pull_requests(){
     # USAGE: get_pr <GITHUB_PR_NUMBER>
+    get_pr 1699 # Use python3 everywhere; fixes make check
     return
 }
 
@@ -61,24 +33,25 @@ mkdir -p ${TEST_DIR}
 
 echo "Starting integration test run..."
 
-module purge && module load intel mvapich2 autotools cmake ccache
+# Default toolchain (intel)
+module purge && module load ohpc ccache
+source ${HOME}/geopm/integration/config/build_env.sh
 
-cd ${GEOPM_PATH}
+cd ${GEOPM_SOURCE}
 git fetch --all
 reset_pr
 git clean -fdx --quiet
 get_pull_requests
-# cherrypick # BRG : Suspect this is hanging in the middle of the night and causing weird stuff downstream.
 
 # Download required python dependencies
 rm -fr ${HOME}/.local
-curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py > ${TEST_DIR}/pip.log 2>&1
-python3 get-pip.py --user > ${TEST_DIR}/pip.log 2>&1
+# curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py > ${TEST_DIR}/pip.log 2>&1
+# python3 get-pip.py --user > ${TEST_DIR}/pip.log 2>&1
 pip install --user --ignore-installed --upgrade pip > ${TEST_DIR}/pip.log 2>&1
 pip install --user --ignore-installed --upgrade -r scripts/requirements.txt > ${TEST_DIR}/pip.log 2>&1
 
 # Intel Toolchain (debug build for unit tests)
-go -ictg > ${TEST_DIR}/intel_debug_build_${LOG_FILE} 2>&1
+go -ctg > ${TEST_DIR}/intel_debug_build_${LOG_FILE} 2>&1
 RC=$?
 if [ ${RC} -ne 0 ]; then
     TEST_LOG="${TEST_OUTPUT_URL}/cron_runs/${TIMESTAMP}/intel_debug_build_${LOG_FILE}"
@@ -93,7 +66,7 @@ fi
 
 # Intel Toolchain (release build for integration tests)
 git clean -fdx --quiet
-go -ic > ${TEST_DIR}/intel_release_build_${LOG_FILE} 2>&1
+go -c > ${TEST_DIR}/intel_release_build_${LOG_FILE} 2>&1
 ./integration/test/test_tutorial_base.sh > ${TEST_DIR}/test_tutorial_base_${LOG_FILE} 2>&1
 make install
 
@@ -101,7 +74,7 @@ make install
 sbatch integration_batch.sh intel loop
 # FIXME Make this launch resiliant to the script timing out
 echo "Integration tests launched via sbatch.  Sleeping..."
-while [ ! -f ${GEOPM_PATH}/integration/test/.tests_complete ]; do
+while [ ! -f ${GEOPM_SOURCE}/integration/test/.tests_complete ]; do
     sleep 5
 done
 echo "Integration tests complete."
@@ -148,7 +121,6 @@ else
     echo "PASS email sent."
 fi
 
-# exit 1
 # End test run
 #############################
 
@@ -160,17 +132,19 @@ TEST_DIR=${HOME}/public_html/coverage_runs/${TIMESTAMP}
 mkdir -p ${TEST_DIR}
 
 # GNU Toolchain - Runs unit tests, then integration tests, then generates coverage report
-module purge && module load gnu7 mvapich2 autotools cmake ccache
-export LD_LIBRARY_PATH=${GEOPM_PATH}/openmp/lib:${LD_LIBRARY_PATH}
+module purge && module load gnu9 mpich autotools cmake ccache
+source ${HOME}/geopm/integration/config/gnu_env.sh
+GEOPM_SKIP_COMPILER_CHECK=yes source ${HOME}/geopm/integration/config/build_env.sh
+# export LD_LIBRARY_PATH=${GEOPM_SOURCE}/openmp/lib:${LD_LIBRARY_PATH}
 
-cd ${GEOPM_PATH}
+cd ${GEOPM_SOURCE}
 git fetch --all
 reset_pr
 git clean -fdx --quiet
 get_pull_requests
 # cherrypick
 
-go -dc > ${TEST_DIR}/gnu_release_build_${LOG_FILE} 2>&1
+go -vc > ${TEST_DIR}/gnu_release_build_${LOG_FILE} 2>&1
 
 # Initial / baseline lcov
 lcov --capture --initial --directory src --directory test --output-file base_coverage.info --no-external > >(tee -a coverage_${LOG_FILE}) 2>&1
@@ -178,7 +152,7 @@ lcov --capture --initial --directory src --directory test --output-file base_cov
 # Run integration tests
 sbatch integration_batch.sh gnu once
 echo "Integration tests launched via sbatch.  Sleeping..."
-while [ ! -f ${GEOPM_PATH}/integration/test/.tests_complete ]; do
+while [ ! -f ${GEOPM_SOURCE}/integration/test/.tests_complete ]; do
     sleep 5
 done
 echo "Integration tests complete."

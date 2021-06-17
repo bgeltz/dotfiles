@@ -9,7 +9,6 @@ Usage: ${0} [-h] [-c] [-d] [-i] [-t]
 Options:
     -c : Start with make clean
     -d : Force default (GNU) environment build (autogen, configure, ...)
-    -i : Force Intel environment build
     -t : Run all the unit tests after compiling
     -h : Print this page
 EOF
@@ -18,7 +17,7 @@ EOF
 BUILD_TIMESTAMP=${TIMESTAMP:-$(date +%F_%H%M.%S)}
 export BIN_PATH=${HOME}/build
 
-while getopts "hcditgq" opt; do
+while getopts "hctvgq" opt; do
     case $opt in
         h)
             usage
@@ -27,14 +26,11 @@ while getopts "hcditgq" opt; do
         c)
             export MAKE_CLEAN=1
             ;;
-        d)
-            export FORCE_DEFAULTS=1
-            ;;
-        i)
-            export FORCE_INTEL=1
-            ;;
         t)
             export RUN_TESTS=1
+            ;;
+        v)
+            export RUN_COVERAGE=1
             ;;
         g)
             export FORCE_DEBUG=1

@@ -5,9 +5,9 @@
 LOG_FILE=test_output.log
 
 if [ "${1}" == "gnu" ]; then
-    module purge && module load gnu7 mvapich2 autotools
+    module purge && module load gnu9 mpich autotools
 elif [ "${1}" == "intel" ]; then
-    module purge && module load intel mvapich2 autotools
+    module purge && module load ohpc
 else
     exit 1 # Invalid module list requested
 fi
