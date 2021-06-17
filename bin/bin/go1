@@ -25,17 +25,8 @@ if [ -n "${MAKE_CLEAN}" ]; then
     rm -fr ${GEOPM_PATH}
 fi
 
-if [ -n "${FORCE_DEFAULTS}" ]; then
-    ./autogen.sh
-    # CC=clang CXX=clang++ ./configure --prefix=${GEOPM_PATH} ${TEST_FLAGS}
-    ./configure --prefix=${GEOPM_PATH} ${TEST_FLAGS}
-fi
-
-if [ -n "${FORCE_INTEL}" ]; then
-    ./autogen.sh
-    CC=icc CXX=icpc FC=ifort F77=ifort ./configure --prefix=${GEOPM_PATH} ${TEST_FLAGS}
-fi
-
+./autogen.sh
+./configure --prefix=${GEOPM_PATH} ${TEST_FLAGS}
 make -j${PROCS}
 make install
 
