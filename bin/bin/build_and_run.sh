@@ -19,7 +19,6 @@ get_pr(){
 
 get_pull_requests(){
     # USAGE: get_pr <GITHUB_PR_NUMBER>
-    get_pr 1699 # Use python3 everywhere; fixes make check
     return
 }
 
@@ -146,7 +145,12 @@ get_pull_requests
 
 go -vc > ${TEST_DIR}/gnu_release_build_${LOG_FILE} 2>&1
 
+# Use source build of lcov to resolve: https://github.com/linux-test-project/lcov/issues/58
+#    The version in zypper is too old
+export PATH=${HOME}/build/lcov/bin:${PATH}
+
 # Initial / baseline lcov
+echo "lcov - Baseline capture" >> coverage_${LOG_FILE}
 lcov --capture --initial --directory src --directory test --output-file base_coverage.info --no-external > >(tee -a coverage_${LOG_FILE}) 2>&1
 
 # Run integration tests
@@ -161,12 +165,16 @@ echo "Integration tests complete."
 make check > >(tee -a check_${LOG_FILE}) 2>&1
 # make coverage > >(tee -a check_${LOG_FILE}) 2>&1 # Target does lcov and genhtml calls
 
+echo "lcov - Coverage capture" >> coverage_${LOG_FILE}
 lcov --no-external --capture --directory src --directory test --output-file coverage.info > >(tee -a coverage_${LOG_FILE}) 2>&1
 
+echo "lcov - Baseline/Coverage combine" >> coverage_${LOG_FILE}
 lcov --rc lcov_branch_coverage=1 -a base_coverage.info -a coverage.info -o combined_coverage.info > >(tee -a coverage_${LOG_FILE}) 2>&1
 
+echo "lcov - Combined coverage filter" >> coverage_${LOG_FILE}
 lcov --rc lcov_branch_coverage=1 --remove combined_coverage.info "$(pwd)/test*" "$(pwd)/contrib*" "$(pwd)/src/geopm_pmpi_fortran.c" "$(pwd)/gmock*" "/opt*" "/usr*" "5.3.0*" -o filtered_coverage.info > >(tee -a coverage_${LOG_FILE}) 2>&1
 
+echo "genhtml - Webpage construction" >> coverage_${LOG_FILE}
 genhtml filtered_coverage.info --output-directory coverage --legend -t $(git describe) -f > >(tee -a coverage_${LOG_FILE}) 2>&1
 
 # Copy coverage html to date stamped public_html dir
