@@ -29,6 +29,7 @@ TEST_DIR=${HOME}/public_html/cron_runs/${TIMESTAMP}
 LOG_FILE=test_output.log
 
 mkdir -p ${TEST_DIR}
+ln -sfn ${TEST_DIR} $(dirname ${TEST_DIR})/latest
 
 echo "Starting integration test run..."
 
