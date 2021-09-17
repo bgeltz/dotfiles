@@ -6,7 +6,7 @@ MAILING_LIST=${MAILING_LIST}
 
 reset_pr(){
     2>/dev/null git checkout -b pr-test
-    git reset --hard origin/dev
+    git reset --hard origin/geopm-service
 }
 
 get_pr(){
@@ -19,6 +19,7 @@ get_pr(){
 
 get_pull_requests(){
     # USAGE: get_pr <GITHUB_PR_NUMBER>
+    get_pr 1873 # Unmerged fixes for nightly CI
     return
 }
 
@@ -40,29 +41,42 @@ source ${HOME}/geopm/integration/config/build_env.sh
 cd ${GEOPM_SOURCE}
 git fetch --all
 reset_pr
-git clean -fdx --quiet
+git clean -ffdx --quiet
 get_pull_requests
 
 # Download required python dependencies
 rm -fr ${HOME}/.local
+rm -fr ${HOME}/.cache
 # curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py > ${TEST_DIR}/pip.log 2>&1
 # python3 get-pip.py --user > ${TEST_DIR}/pip.log 2>&1
-pip install --user --ignore-installed --upgrade pip > ${TEST_DIR}/pip.log 2>&1
-pip install --user --ignore-installed --upgrade -r scripts/requirements.txt > ${TEST_DIR}/pip.log 2>&1
+python3 -m pip install --user --ignore-installed --upgrade pip setuptools wheel pep517 >> ${TEST_DIR}/pip.log 2>&1 && \
+python3 -m pip install --user --upgrade -r service/requirements.txt >> ${TEST_DIR}/pip.log 2>&1 && \
+python3 -m pip install --user --ignore-installed --upgrade -r scripts/requirements.txt >> ${TEST_DIR}/pip.log 2>&1
+RC=$?
+if [ ${RC} -ne 0 ]; then
+    TEST_LOG="${TEST_OUTPUT_URL}/cron_runs/${TIMESTAMP}/pip.log"
+    ERR_MSG="pip has failed to install the python requirements.  Please see the log for more information:\n${TEST_LOG}\n"
+    notify.sh "Integration test failure : ${TIMESTAMP}" "${ERR_MSG}"
+    exit 1
+fi
 
 # Intel Toolchain (debug build for unit tests)
-go -ctg > ${TEST_DIR}/intel_debug_build_${LOG_FILE} 2>&1
+# go -ctg > ${TEST_DIR}/intel_debug_build_${LOG_FILE} 2>&1
+GEOPM_GLOBAL_CONFIG_OPTIONS="--enable-debug" GEOPM_RUN_TESTS=yes ./build.sh > ${TEST_DIR}/intel_debug_build_${LOG_FILE} 2> ${TEST_DIR}/intel_debug_build_${LOG_FILE}err
+
 RC=$?
 if [ ${RC} -ne 0 ]; then
     TEST_LOG="${TEST_OUTPUT_URL}/cron_runs/${TIMESTAMP}/intel_debug_build_${LOG_FILE}"
     ERR_MSG="Running 'make' or 'make check' with the Intel toolchain failed.  Please see the output for more information:\n${TEST_OUTPUT_URL}/build_logs/build.${TIMESTAMP}.log\n${TEST_LOG}\n"
 
-    echo -e ${ERR_MSG} | mail -r "do-not-reply" -s "Integration test failure : ${TIMESTAMP}" ${MAILING_LIST}
+    # echo -e ${ERR_MSG} | mail -r "do-not-reply" -s "Integration test failure : ${TIMESTAMP}" ${MAILING_LIST}
 
     notify.sh "Integration test failure : ${TIMESTAMP}" "${ERR_MSG}"
 
     echo "Email sent."
 fi
+
+exit 1
 
 # Intel Toolchain (release build for integration tests)
 git clean -fdx --quiet
