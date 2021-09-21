@@ -50,7 +50,7 @@ rm -fr ${HOME}/.cache
 # curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py > ${TEST_DIR}/pip.log 2>&1
 # python3 get-pip.py --user > ${TEST_DIR}/pip.log 2>&1
 python3 -m pip install --user --ignore-installed --upgrade pip setuptools wheel pep517 >> ${TEST_DIR}/pip.log 2>&1 && \
-python3 -m pip install --user --upgrade -r service/requirements.txt >> ${TEST_DIR}/pip.log 2>&1 && \
+# python3 -m pip install --user --upgrade -r service/requirements.txt >> ${TEST_DIR}/pip.log 2>&1 && \ # Intentionally commented out, should be satisfied by system reqs only
 python3 -m pip install --user --ignore-installed --upgrade -r scripts/requirements.txt >> ${TEST_DIR}/pip.log 2>&1
 RC=$?
 if [ ${RC} -ne 0 ]; then
@@ -61,7 +61,6 @@ if [ ${RC} -ne 0 ]; then
 fi
 
 # Intel Toolchain (debug build for unit tests)
-# go -ctg > ${TEST_DIR}/intel_debug_build_${LOG_FILE} 2>&1
 GEOPM_GLOBAL_CONFIG_OPTIONS="--enable-debug" GEOPM_RUN_TESTS=yes ./build.sh > ${TEST_DIR}/intel_debug_build_${LOG_FILE} 2> ${TEST_DIR}/intel_debug_build_${LOG_FILE}err
 
 RC=$?
@@ -76,12 +75,13 @@ if [ ${RC} -ne 0 ]; then
     echo "Email sent."
 fi
 
-exit 1
-
 # Intel Toolchain (release build for integration tests)
-git clean -fdx --quiet
-go -c > ${TEST_DIR}/intel_release_build_${LOG_FILE} 2>&1
+git clean -ffdx --quiet
+GEOPM_SKIP_INSTALL=yes ./build.sh > ${TEST_DIR}/intel_release_build_${LOG_FILE} 2> ${TEST_DIR}/intel_release_build_${LOG_FILE}err
 ./integration/test/test_tutorial_base.sh > ${TEST_DIR}/test_tutorial_base_${LOG_FILE} 2>&1
+cd service
+make install
+cd ..
 make install
 
 # Runs the integration tests 10 times
@@ -108,7 +108,7 @@ TEST_OUTPUT_LOG=${TEST_OUTPUT_URL}/${OUTPUT_LOG}
 if [ -f ${TEST_DIR}/.tests_failed ]; then
     ERR_MSG="The integration tests have failed.  Please see the output for more information:\n${TEST_OUTPUT_LOG}\n\nAdditional information here:\n${TEST_OUTPUT_URL}/cron_runs/${TIMESTAMP}"
 
-    echo -e ${ERR_MSG} | mail -r "do-not-reply" -s "Integration test failure : ${TIMESTAMP}" ${MAILING_LIST}
+    # echo -e ${ERR_MSG} | mail -r "do-not-reply" -s "Integration test failure : ${TIMESTAMP}" ${MAILING_LIST}
 
     notify.sh "Integration test failure : ${TIMESTAMP}" "${ERR_MSG}"
 
@@ -123,7 +123,7 @@ else
     # End get skipped
 
     ERR_MSG="The integration tests have PASSED! :).  Please see the output for more information:\n${TEST_OUTPUT_LOG}\n\nAdditional information here:\n${TEST_OUTPUT_URL}/cron_runs/${TIMESTAMP}\n\nSkipped tests:\n\n${SKIPPED_TESTS}\n"
-    echo -e "${ERR_MSG}" | mail -r "do-not-reply" -s "Integration test PASS : ${TIMESTAMP}" ${MAILING_LIST}
+    # echo -e "${ERR_MSG}" | mail -r "do-not-reply" -s "Integration test PASS : ${TIMESTAMP}" ${MAILING_LIST}
 
     # Remove ' and " from SKIPPED_TESTS
     SKIPPED_TESTS=${SKIPPED_TESTS//\'/}
@@ -137,6 +137,8 @@ fi
 
 # End test run
 #############################
+
+exit 1
 
 ####################################
 # Nightly coverage report generation
