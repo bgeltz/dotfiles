@@ -66,10 +66,14 @@ GEOPM_GLOBAL_CONFIG_OPTIONS="--enable-debug" GEOPM_RUN_TESTS=yes ./build.sh > ${
 RC=$?
 if [ ${RC} -ne 0 ]; then
     TEST_LOG="${TEST_OUTPUT_URL}/cron_runs/${TIMESTAMP}/intel_debug_build_${LOG_FILE}"
-    ERR_MSG="Running 'make' or 'make check' with the Intel toolchain failed.  Please see the output for more information:\n${TEST_OUTPUT_URL}/build_logs/build.${TIMESTAMP}.log\n${TEST_LOG}\n"
+    TEST_LOG_ERR="${TEST_OUTPUT_URL}/cron_runs/${TIMESTAMP}/intel_debug_build_${LOG_FILE}err"
+    ERR_MSG="Running 'make' or 'make check' with the Intel toolchain failed.  Please see the output for more information:\n${TEST_OUTPUT_URL}/build_logs/build.${TIMESTAMP}.log\n${TEST_LOG}\n${TEST_LOG_ERR}\n"
 
     # echo -e ${ERR_MSG} | mail -r "do-not-reply" -s "Integration test failure : ${TIMESTAMP}" ${MAILING_LIST}
 
+    # Remove ' and " from ERR_MSG
+    ERR_MSG=${ERR_MSG//\'/}
+    ERR_MSG=${ERR_MSG//\"/}
     notify.sh "Integration test failure : ${TIMESTAMP}" "${ERR_MSG}"
 
     echo "Email sent."
