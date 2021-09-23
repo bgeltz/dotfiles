@@ -15,10 +15,6 @@ fi
 source ${HOME}/geopm/integration/config/run_env.sh
 
 # Run integration tests
-export GEOPM_PLUGIN_PATH=${GEOPM_SOURCE}/.libs
-export LD_LIBRARY_PATH=${GEOPM_SOURCE}/.libs:${LD_LIBRARY_PATH}
-export PATH=${GEOPM_SOURCE}/.libs:${PATH}
-
 pushd ${GEOPM_SOURCE}/integration/test
 
 if [ "${2}" == "once" ]; then
