@@ -69,7 +69,7 @@ if [ ${RC} -ne 0 ]; then
     TEST_LOG_ERR="${TEST_OUTPUT_URL}/cron_runs/${TIMESTAMP}/intel_debug_build_${LOG_FILE}err"
     ERR_MSG="Running 'make' or 'make check' with the Intel toolchain failed.  Please see the output for more information:\n${TEST_OUTPUT_URL}/build_logs/build.${TIMESTAMP}.log\n${TEST_LOG}\n${TEST_LOG_ERR}\n"
 
-    # echo -e ${ERR_MSG} | mail -r "do-not-reply" -s "Integration test failure : ${TIMESTAMP}" ${MAILING_LIST}
+    echo -e ${ERR_MSG} | mail -r "do-not-reply" -s "Integration test failure : ${TIMESTAMP}" ${MAILING_LIST}
 
     # Remove ' and " from ERR_MSG
     ERR_MSG=${ERR_MSG//\'/}
@@ -112,7 +112,7 @@ TEST_OUTPUT_LOG=${TEST_OUTPUT_URL}/${OUTPUT_LOG}
 if [ -f ${TEST_DIR}/.tests_failed ]; then
     ERR_MSG="The integration tests have failed.  Please see the output for more information:\n${TEST_OUTPUT_LOG}\n\nAdditional information here:\n${TEST_OUTPUT_URL}/cron_runs/${TIMESTAMP}"
 
-    # echo -e ${ERR_MSG} | mail -r "do-not-reply" -s "Integration test failure : ${TIMESTAMP}" ${MAILING_LIST}
+    echo -e ${ERR_MSG} | mail -r "do-not-reply" -s "Integration test failure : ${TIMESTAMP}" ${MAILING_LIST}
 
     notify.sh "Integration test failure : ${TIMESTAMP}" "${ERR_MSG}"
 
@@ -127,7 +127,7 @@ else
     # End get skipped
 
     ERR_MSG="The integration tests have PASSED! :).  Please see the output for more information:\n${TEST_OUTPUT_LOG}\n\nAdditional information here:\n${TEST_OUTPUT_URL}/cron_runs/${TIMESTAMP}\n\nSkipped tests:\n\n${SKIPPED_TESTS}\n"
-    # echo -e "${ERR_MSG}" | mail -r "do-not-reply" -s "Integration test PASS : ${TIMESTAMP}" ${MAILING_LIST}
+    echo -e "${ERR_MSG}" | mail -r "do-not-reply" -s "Integration test PASS : ${TIMESTAMP}" ${MAILING_LIST}
 
     # Remove ' and " from SKIPPED_TESTS
     SKIPPED_TESTS=${SKIPPED_TESTS//\'/}
