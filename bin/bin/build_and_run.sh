@@ -5,8 +5,7 @@ set -ex
 MAILING_LIST=${MAILING_LIST}
 
 reset_pr(){
-    # 2>/dev/null git checkout -b pr-test
-    2>/dev/null git checkout pr-test
+    git switch -C pr-test
     git reset --hard origin/geopm-service
 }
 
@@ -101,7 +100,7 @@ echo "Integration tests complete."
 # Move the files into the TEST_DIR
 echo "Moving files to ${TEST_DIR}..."
 pushd integration/test
-for f in $(ls -I "*h5" *log *report *trace-* *config .??*);
+for f in $(ls -I "*h5" *log *report *trace-* *config);
 do
     mv ${f} ${TEST_DIR}
 done
