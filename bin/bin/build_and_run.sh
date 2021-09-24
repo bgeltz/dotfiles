@@ -1,11 +1,12 @@
 #!/bin/bash -l
 
-set -x
+set -ex
 
 MAILING_LIST=${MAILING_LIST}
 
 reset_pr(){
-    2>/dev/null git checkout -b pr-test
+    # 2>/dev/null git checkout -b pr-test
+    2>/dev/null git checkout pr-test
     git reset --hard origin/geopm-service
 }
 
@@ -142,14 +143,13 @@ fi
 # End test run
 #############################
 
-exit 1
-
 ####################################
 # Nightly coverage report generation
 export TIMESTAMP=$(date +\%F_\%H\%M)
 TEST_DIR=${HOME}/public_html/coverage_runs/${TIMESTAMP}
 
 mkdir -p ${TEST_DIR}
+ln -sfn ${TEST_DIR} $(dirname ${TEST_DIR})/latest
 
 # GNU Toolchain - Runs unit tests, then integration tests, then generates coverage report
 module purge && module load gnu9 mpich autotools cmake ccache
@@ -160,19 +160,20 @@ GEOPM_SKIP_COMPILER_CHECK=yes source ${HOME}/geopm/integration/config/build_env.
 cd ${GEOPM_SOURCE}
 git fetch --all
 reset_pr
-git clean -fdx --quiet
+git clean -ffdx --quiet
 get_pull_requests
 # cherrypick
 
-go -vc > ${TEST_DIR}/gnu_release_build_${LOG_FILE} 2>&1
+GEOPM_SKIP_COMPILER_CHECK=yes GEOPM_SKIP_INSTALL=yes GEOPM_GLOBAL_CONFIG_OPTIONS="--enable-coverage" ./build.sh > ${TEST_DIR}/gnu_release_build_${LOG_FILE} 2> ${TEST_DIR}/gnu_release_build_${LOG_FILE}err
 
 # Use source build of lcov to resolve: https://github.com/linux-test-project/lcov/issues/58
 #    The version in zypper is too old
 export PATH=${HOME}/build/lcov/bin:${PATH}
 
 # Initial / baseline lcov
+DIRECTORY_LIST="--directory src --directory test --directory service/src --directory service/test"
 echo "lcov - Baseline capture" >> coverage_${LOG_FILE}
-lcov --capture --initial --directory src --directory test --output-file base_coverage.info --no-external > >(tee -a coverage_${LOG_FILE}) 2>&1
+lcov --capture --initial ${DIRECTORY_LIST} --output-file base_coverage.info --no-external > >(tee -a coverage_${LOG_FILE}) 2>&1
 
 # Run integration tests
 sbatch integration_batch.sh gnu once
@@ -183,11 +184,17 @@ done
 echo "Integration tests complete."
 
 # Run unit tests
+cd service
+make -j9 checkprogs > >(tee -a check_service_${LOG_FILE}) 2>&1
+make check > >(tee -a check_service_${LOG_FILE}) 2>&1
+cd ..
+make -j9 checkprogs > >(tee -a check_${LOG_FILE}) 2>&1
 make check > >(tee -a check_${LOG_FILE}) 2>&1
+
 # make coverage > >(tee -a check_${LOG_FILE}) 2>&1 # Target does lcov and genhtml calls
 
 echo "lcov - Coverage capture" >> coverage_${LOG_FILE}
-lcov --no-external --capture --directory src --directory test --output-file coverage.info > >(tee -a coverage_${LOG_FILE}) 2>&1
+lcov --no-external --capture ${DIRECTORY_LIST} --output-file coverage.info > >(tee -a coverage_${LOG_FILE}) 2>&1
 
 echo "lcov - Baseline/Coverage combine" >> coverage_${LOG_FILE}
 lcov --rc lcov_branch_coverage=1 -a base_coverage.info -a coverage.info -o combined_coverage.info > >(tee -a coverage_${LOG_FILE}) 2>&1
@@ -202,17 +209,19 @@ genhtml filtered_coverage.info --output-directory coverage --legend -t $(git des
 cp -rp coverage ${TEST_DIR}
 
 # Copy unit and integration test outputs to dir
+cp -rp --parents service/test/gtest_links ${TEST_DIR}
+cp -rp --parents service/geopmdpy_test/pytest_links ${TEST_DIR}
+cp -rp --parents scripts/test/pytest_links ${TEST_DIR}
 cp -rp --parents test/gtest_links ${TEST_DIR}
-cp -rp --parents test/fortran/fortran_links ${TEST_DIR}
 
 FILES=\
 "integration/test/*log "\
 "integration/test/*report "\
 "integration/test/*trace-* "\
 "integration/test/*config "\
-"*info "\
-"*log "\
-"*out "\
+"*info* "\
+"*log* "\
+"*out* "\
 
 set -x
 for f in $(ls -I "*h5" ${FILES});
