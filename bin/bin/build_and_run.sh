@@ -6,7 +6,7 @@ MAILING_LIST=${MAILING_LIST}
 
 reset_pr(){
     git switch -C pr-test
-    git reset --hard origin/geopm-service
+    git reset --hard origin/dev
 }
 
 get_pr(){
@@ -60,7 +60,7 @@ if [ ${RC} -ne 0 ]; then
 fi
 
 # Intel Toolchain (debug build for unit tests)
-GEOPM_GLOBAL_CONFIG_OPTIONS="--enable-debug" GEOPM_RUN_TESTS=yes ./build.sh > ${TEST_DIR}/intel_debug_build_${LOG_FILE} 2> ${TEST_DIR}/intel_debug_build_${LOG_FILE}err
+GEOPM_GLOBAL_CONFIG_OPTIONS="--enable-debug" GEOPM_RUN_TESTS=yes ./integration/config/build.sh > ${TEST_DIR}/intel_debug_build_${LOG_FILE} 2> ${TEST_DIR}/intel_debug_build_${LOG_FILE}err
 
 RC=$?
 if [ ${RC} -ne 0 ]; then
@@ -80,7 +80,7 @@ fi
 
 # Intel Toolchain (release build for integration tests)
 git clean -ffdx --quiet
-GEOPM_SKIP_INSTALL=yes ./build.sh > ${TEST_DIR}/intel_release_build_${LOG_FILE} 2> ${TEST_DIR}/intel_release_build_${LOG_FILE}err
+GEOPM_SKIP_INSTALL=yes ./integration/config/build.sh > ${TEST_DIR}/intel_release_build_${LOG_FILE} 2> ${TEST_DIR}/intel_release_build_${LOG_FILE}err
 ./integration/test/test_tutorial_base.sh > ${TEST_DIR}/test_tutorial_base_${LOG_FILE} 2>&1
 cd service
 make install
@@ -162,7 +162,7 @@ git clean -ffdx --quiet
 get_pull_requests
 # cherrypick
 
-GEOPM_SKIP_COMPILER_CHECK=yes GEOPM_SKIP_INSTALL=yes GEOPM_GLOBAL_CONFIG_OPTIONS="--enable-coverage" ./build.sh > ${TEST_DIR}/gnu_release_build_${LOG_FILE} 2> ${TEST_DIR}/gnu_release_build_${LOG_FILE}err
+GEOPM_SKIP_COMPILER_CHECK=yes GEOPM_SKIP_INSTALL=yes GEOPM_GLOBAL_CONFIG_OPTIONS="--enable-coverage" ./integration/config/build.sh > ${TEST_DIR}/gnu_release_build_${LOG_FILE} 2> ${TEST_DIR}/gnu_release_build_${LOG_FILE}err
 
 # Use source build of lcov to resolve: https://github.com/linux-test-project/lcov/issues/58
 #    The version in zypper is too old
