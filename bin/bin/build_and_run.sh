@@ -19,7 +19,6 @@ get_pr(){
 
 get_pull_requests(){
     # USAGE: get_pr <GITHUB_PR_NUMBER>
-    get_pr 1873 # Unmerged fixes for nightly CI
     return
 }
 
