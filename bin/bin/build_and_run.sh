@@ -80,12 +80,16 @@ fi
 
 # Intel Toolchain (release build for integration tests)
 git clean -ffdx --quiet
+rm -fr ${GEOPM_INSTALL}
 GEOPM_SKIP_INSTALL=yes ./integration/config/build.sh > ${TEST_DIR}/intel_release_build_${LOG_FILE} 2> ${TEST_DIR}/intel_release_build_${LOG_FILE}err
+# Run the tutorial tests with in-tree build first
 ./integration/test/test_tutorial_base.sh > ${TEST_DIR}/test_tutorial_base_${LOG_FILE} 2>&1
-cd service
-make install
-cd ..
-make install
+
+# Rebuild, installing this time
+git clean -ffdx --quiet
+./integration/config/build.sh > ${TEST_DIR}/intel_release_build_${LOG_FILE} 2> ${TEST_DIR}/intel_release_build_${LOG_FILE}err
+# Make sure the tutorials are built since they cannot be built on the computes
+./integration/test/test_tutorial_base.sh > ${TEST_DIR}/test_tutorial_base_${LOG_FILE} 2>&1
 
 # Runs the integration tests 10 times
 sbatch integration_batch.sh intel loop
@@ -97,6 +101,7 @@ done
 echo "Integration tests complete."
 
 # Move the files into the TEST_DIR
+set +e
 echo "Moving files to ${TEST_DIR}..."
 pushd integration/test
 for f in $(ls -I "*h5" *log *report *trace-* *config);
@@ -104,6 +109,7 @@ do
     mv ${f} ${TEST_DIR}
 done
 popd
+set -e
 
 # Send mail if there was a test failure.
 OUTPUT_LOG=cron_runs/${TIMESTAMP}/test_loop_output.log
@@ -162,6 +168,7 @@ git clean -ffdx --quiet
 get_pull_requests
 # cherrypick
 
+rm -fr ${GEOPM_INSTALL}
 GEOPM_SKIP_COMPILER_CHECK=yes GEOPM_SKIP_INSTALL=yes GEOPM_GLOBAL_CONFIG_OPTIONS="--enable-coverage" ./integration/config/build.sh > ${TEST_DIR}/gnu_release_build_${LOG_FILE} 2> ${TEST_DIR}/gnu_release_build_${LOG_FILE}err
 
 # Use source build of lcov to resolve: https://github.com/linux-test-project/lcov/issues/58
@@ -221,12 +228,12 @@ FILES=\
 "*log* "\
 "*out* "\
 
-set -x
+set +e
 for f in $(ls -I "*h5" ${FILES});
 do
     cp -p --parents ${f} ${TEST_DIR}
 done
-set +x
+set -e
 
 RDY_MSG="The coverage report is ready:\n${TEST_OUTPUT_URL}/coverage_runs/${TIMESTAMP}/coverage\n\nAdditional data available in parent directory."
 echo -e ${RDY_MSG}  | mail -r "do-not-reply" -s "Coverage report ready : ${TIMESTAMP}" ${MAILING_LIST}
