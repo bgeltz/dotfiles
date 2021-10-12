@@ -19,6 +19,7 @@ get_pr(){
 
 get_pull_requests(){
     # USAGE: get_pr <GITHUB_PR_NUMBER>
+    get_pr 1929
     return
 }
 
@@ -81,15 +82,13 @@ fi
 # Intel Toolchain (release build for integration tests)
 git clean -ffdx --quiet
 rm -fr ${GEOPM_INSTALL}
-GEOPM_SKIP_INSTALL=yes ./integration/config/build.sh > ${TEST_DIR}/intel_release_build_${LOG_FILE} 2> ${TEST_DIR}/intel_release_build_${LOG_FILE}err
-# Run the tutorial tests with in-tree build first
-./integration/test/test_tutorial_base.sh > ${TEST_DIR}/test_tutorial_base_${LOG_FILE} 2>&1
 
-# Rebuild, installing this time
-git clean -ffdx --quiet
 ./integration/config/build.sh > ${TEST_DIR}/intel_release_build_${LOG_FILE} 2> ${TEST_DIR}/intel_release_build_${LOG_FILE}err
 # Make sure the tutorials are built since they cannot be built on the computes
 ./integration/test/test_tutorial_base.sh > ${TEST_DIR}/test_tutorial_base_${LOG_FILE} 2>&1
+cd service
+make rpm
+cd ..
 
 # Runs the integration tests 10 times
 sbatch integration_batch.sh intel loop

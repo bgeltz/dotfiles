@@ -15,7 +15,8 @@ fi
 source ${HOME}/geopm/integration/config/run_env.sh
 
 # Run integration tests
-pushd ${GEOPM_SOURCE}/integration/test
+LEGACY_DIR=${GEOPM_SOURCE}/integration/test
+pushd ${LEGACY_DIR}
 
 if [ "${2}" == "once" ]; then
     GEOPM_RUN_LONG_TESTS=true python3 . -v > >(tee -a integration_${LOG_FILE}) 2>&1
@@ -24,7 +25,8 @@ elif [ "${2}" == "loop" ]; then
 else
     exit 1 # Invalid test configuration requested
 fi
+popd
 
-touch .tests_complete
+touch ${LEGACY_DIR}/.tests_complete
 popd
 
