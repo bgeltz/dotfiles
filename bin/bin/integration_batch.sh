@@ -4,15 +4,18 @@
 
 LOG_FILE=test_output.log
 
+source ${HOME}/geopm/integration/config/run_env.sh
+
 if [ "${1}" == "gnu" ]; then
     module purge && module load gnu9 mpich autotools
+    # Set LD_LIBARY_PATH and PATH since the GNU run is performed without 'make install'
+    export LD_LIBRARY_PATH=${GEOPM_SOURCE}/service/.libs:${GEOPM_SOURCE}/.libs:${LD_LIBRARY_PATH}
+    export PATH=${GEOPM_SOURCE}/service/.libs:${GEOPM_SOURCE}/.libs:${PATH}
 elif [ "${1}" == "intel" ]; then
     module purge && module load ohpc
 else
     exit 1 # Invalid module list requested
 fi
-
-source ${HOME}/geopm/integration/config/run_env.sh
 
 # Run integration tests
 LEGACY_DIR=${GEOPM_SOURCE}/integration/test
@@ -28,5 +31,4 @@ fi
 popd
 
 touch ${LEGACY_DIR}/.tests_complete
-popd
 

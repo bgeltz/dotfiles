@@ -19,7 +19,7 @@ get_pr(){
 
 get_pull_requests(){
     # USAGE: get_pr <GITHUB_PR_NUMBER>
-    get_pr 1929
+    get_pr 1947
     return
 }
 
@@ -158,7 +158,6 @@ ln -sfn ${TEST_DIR} $(dirname ${TEST_DIR})/latest
 module purge && module load gnu9 mpich autotools cmake ccache
 source ${HOME}/geopm/integration/config/gnu_env.sh
 GEOPM_SKIP_COMPILER_CHECK=yes source ${HOME}/geopm/integration/config/build_env.sh
-# export LD_LIBRARY_PATH=${GEOPM_SOURCE}/openmp/lib:${LD_LIBRARY_PATH}
 
 cd ${GEOPM_SOURCE}
 git fetch --all

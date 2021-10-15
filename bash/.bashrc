@@ -111,6 +111,7 @@ export PATH=\
 "${HOME}/build/git/bin:"\
 "${HOME}/build/byobu/bin:"\
 "${HOME}/build/tmux/bin:"\
+"${HOME}/build/lcov/bin:"\
 "${PATH}"
 
 # export LD_LIBRARY_PATH=\
