@@ -19,7 +19,6 @@ get_pr(){
 
 get_pull_requests(){
     # USAGE: get_pr <GITHUB_PR_NUMBER>
-    get_pr 1947
     return
 }
 
@@ -103,7 +102,7 @@ echo "Integration tests complete."
 set +e
 echo "Moving files to ${TEST_DIR}..."
 pushd integration/test
-for f in $(ls -I "*h5" *log *report *trace-* *config);
+for f in $(ls -I "*h5" *log *report *trace-* *config .tests*);
 do
     mv ${f} ${TEST_DIR}
 done
