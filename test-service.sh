@@ -6,37 +6,38 @@ echo '######################################################################'
 set -e
 set -x
 
-GEOPM_SKIP_CHECKOUT=True
-export GEOPM_WORKDIR=/home/test-service/output
-export GEOPM_SOURCE=/home/test-service/geopm-cmcantal
-export GEOPM_TEST_SBATCH=/home/test-service/test-service/test-service.sbatch
-
 module purge
-module load ohpc autotools intel impi mkl
+module load ohpc ccache
+
+source ${HOME}/geopm/integration/config/build_env.sh
+export GEOPM_TEST_SBATCH=${HOME}/test-service/test-service.sbatch
+# GEOPM_SKIP_CHECKOUT=True
 
 # Set up git repository
+REMOTE=origin
+BRANCH=dev
 cd ${GEOPM_SOURCE}
 if [ -z "$GEOPM_SKIP_CHECKOUT" ]; then
-    git fetch public
-    git checkout dev
-    git reset --hard public/dev
+    git fetch ${REMOTE}
+    git checkout ${BRANCH}
+    git reset --hard ${REMOTE}/${BRANCH}
 fi
-git clean -dfx
+git clean -ffdx
 
 # Build and install service and base build locally
 pushd service
 ./autogen.sh
-CC=gcc CXX=g++ ./configure --prefix=$HOME/build/geopm-cmcantal
-make -j20
-make -j20 checkprogs
+CC=gcc CXX=g++ ./configure --prefix=${GEOPM_INSTALL}
+make -j9
+make -j9 checkprogs
 make install
 make rpm
 popd
 ./autogen.sh
 source integration/config/build_env.sh
-./configure --prefix=${HOME}/build/geopm-cmcantal
-make -j20
-make -j20 checkprogs
+./configure --prefix=${GEOPM_INSTALL}
+make -j9
+make -j9 checkprogs
 make install
 
 # build tutorial on head node
