@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -l
 
 echo '######################################################################'
 echo '# BEGIN: test-service.sh '$(date)
@@ -6,21 +6,21 @@ echo '######################################################################'
 set -e
 set -x
 
+GEOPM_SKIP_CHECKOUT=True
 export GEOPM_WORKDIR=/home/test-service/output
 export GEOPM_SOURCE=/home/test-service/geopm-cmcantal
 export GEOPM_TEST_SBATCH=/home/test-service/test-service/test-service.sbatch
 
-source /etc/profile.d/lmod.sh
 module purge
 module load ohpc autotools intel impi mkl
 
 # Set up git repository
 cd ${GEOPM_SOURCE}
-#if [ -z "$GEOPM_SKIP_CHECKOUT" ]; then
-#    git fetch public
-#    git checkout dev
-#    git reset --hard public/dev
-#fi
+if [ -z "$GEOPM_SKIP_CHECKOUT" ]; then
+    git fetch public
+    git checkout dev
+    git reset --hard public/dev
+fi
 git clean -dfx
 
 # Build and install service and base build locally

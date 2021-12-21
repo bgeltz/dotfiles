@@ -16,9 +16,15 @@ GEOPM_VERSION=$(cat ${GEOPM_SOURCE}/service/VERSION)
 
 # Install geopm-service RPMs
 INSTALL_COMMAND="sudo /usr/sbin/install_service.sh ${GEOPM_VERSION} ${USER}"
-srun -w ${SLURM_NODELIST} -N ${SLURM_NNODES} -n ${SLURM_NNODES} ${INSTALL_COMMAND}
-python3 $GEOPM_SOURCE/integration/test --verbose
-if [ $? -eq 0 ]; then
+UNINSTALL_COMMAND="sudo /usr/sbin/install_service.sh --remove"
+srun -w ${SLURM_NODELIST} -N ${SLURM_NNODES} ${INSTALL_COMMAND}
+python -m unittest discover \
+       --start-directory ${GEOPM_SOURCE}/integration/test \
+       --pattern 'test_*.py' \
+       --verbose >& test-service.log
+ERR=$?
+srun -w ${SLURM_NODELIST} -N ${SLURM_NNODES} ${UNINSTALL_COMMAND}
+if [ "${ERR}" -eq 0 ]; then
     echo "SUCCESS"
     exit 0
 else
