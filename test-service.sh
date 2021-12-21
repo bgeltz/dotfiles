@@ -16,9 +16,11 @@ module load ohpc autotools intel impi mkl
 
 # Set up git repository
 cd ${GEOPM_SOURCE}
-git fetch public
-git checkout dev
-git reset --hard public/dev
+#if [ -z "$GEOPM_SKIP_CHECKOUT" ]; then
+#    git fetch public
+#    git checkout dev
+#    git reset --hard public/dev
+#fi
 git clean -dfx
 
 # Build and install service and base build locally
@@ -36,6 +38,9 @@ source integration/config/build_env.sh
 make -j20
 make -j20 checkprogs
 make install
+
+# build tutorial on head node
+./integration/test/test_tutorial_base.sh
 
 # Run the GEOPM HPC Runtime integration tests
 test_dir=$(mktemp -d -p${GEOPM_WORKDIR} test-service-$(date +%Y-%m-%d)-XXXXX)
