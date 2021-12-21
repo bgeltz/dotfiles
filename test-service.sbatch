@@ -18,38 +18,38 @@ GEOPM_VERSION=$(cat ${GEOPM_SOURCE}/service/VERSION)
 INSTALL_COMMAND="sudo /usr/sbin/install_service.sh ${GEOPM_VERSION} ${USER}"
 srun -w ${SLURM_NODELIST} -N ${SLURM_NNODES} -n ${SLURM_NNODES} ${INSTALL_COMMAND}
 
-test_list="${GEOPM_SOURCE}/integration/test/test_omp_outer_loop.py \
-           ${GEOPM_SOURCE}/integration/test/test_enforce_policy.py \
-           ${GEOPM_SOURCE}/integration/test/test_profile_policy.py \
-           ${GEOPM_SOURCE}/integration/test/test_plugin_static_policy.py \
-           ${GEOPM_SOURCE}/integration/test/test_tutorial_base.py \
-           ${GEOPM_SOURCE}/integration/test/test_frequency_hint_usage.py \
-           ${GEOPM_SOURCE}/integration/test/test_profile_overflow.py \
-           ${GEOPM_SOURCE}/integration/test/test_trace.py \
-           ${GEOPM_SOURCE}/integration/test/test_monitor.py \
-           ${GEOPM_SOURCE}/integration/test/test_geopmio.py \
-           ${GEOPM_SOURCE}/integration/test/test_ompt.py \
-           ${GEOPM_SOURCE}/integration/test/test_launch_application.py \
-           ${GEOPM_SOURCE}/integration/test/test_launch_pthread.py \
-           ${GEOPM_SOURCE}/integration/test/test_geopmagent.py \
-           ${GEOPM_SOURCE}/integration/test/test_environment.py \
-           ${GEOPM_SOURCE}/integration/test/test_frequency_map.py \
-           ${GEOPM_SOURCE}/integration/test/test_hint_time.py \
-           ${GEOPM_SOURCE}/integration/test/test_progress.py \
-           ${GEOPM_SOURCE}/integration/test/test_programmable_counters.py"
-long_test="${GEOPM_SOURCE}/integration/test/test_ee_timed_scaling_mix.py \
-           ${GEOPM_SOURCE}/integration/test/test_power_balancer.py \
-           ${GEOPM_SOURCE}/integration/test/test_power_governor.py \
-           ${GEOPM_SOURCE}/integration/test/test_scaling_region.py \
-           ${GEOPM_SOURCE}/integration/test/test_timed_scaling_region.py"
+test_list="TestIntegration_omp_outer_loop \
+           TestIntegration_enforce_policy \
+           TestIntegration_profile_policy \
+           TestIntegration_plugin_static_policy \
+           TestIntegration_frequency_hint_usage \
+           TestIntegration_profile_overflow \
+           TestIntegration_trace \
+           TestIntegration_monitor \
+           TestIntegration_geopmio \
+           TestIntegration_ompt \
+           TestIntegration_launch_application \
+           TestIntegration_launch_pthread \
+           TestIntegration_geopmagent \
+           TestIntegration_environment \
+           TestIntegration_frequency_map \
+           TestIntegration_hint_time \
+           TestIntegration_progress \
+           TestIntegration_programmable_counters"
+long_test="TestIntegration_ee_timed_scaling_mix \
+           TestIntegration_power_balancer \
+           TestIntegration_power_governor \
+           TestIntegration_scaling_region \
+           TestIntegration_timed_scaling_region \
+           TestIntegration_tutorial_base"
 if [ ! -z "$GEOPM_RUN_LONG_TESTS" ]; then
     test_list="$test_list $long_test"
 fi
 
 failed=''
 for tt in ${test_list}; do
-    logfile=$(basename ${tt}).log
-    python3 ${tt} >& ${logfile}
+    logfile=$(echo ${tt} | sed -e 's|TestIntegration|test|').py.log
+    python3 ${GEOPM_SOURCE}/integration/test ${tt} >& ${logfile}
     if [ $? -ne 0 ]; then
         failed="${failed} ${tt}"
     fi
