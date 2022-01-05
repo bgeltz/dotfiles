@@ -19,6 +19,7 @@ get_pr(){
 
 get_pull_requests(){
     # USAGE: get_pr <GITHUB_PR_NUMBER>
+    get_pr 2061
     return
 }
 
@@ -89,30 +90,21 @@ cd service
 make rpm
 cd ..
 
+cd ${TEST_DIR}
 # Runs the integration tests 10 times
 sbatch integration_batch.sh intel loop
 # FIXME Make this launch resiliant to the script timing out
 echo "Integration tests launched via sbatch.  Sleeping..."
-while [ ! -f ${GEOPM_SOURCE}/integration/test/.tests_complete ]; do
+while [ ! -f .tests_complete ]; do
     sleep 5
 done
 echo "Integration tests complete."
 
-# Move the files into the TEST_DIR
-set +e
-echo "Moving files to ${TEST_DIR}..."
-pushd integration/test
-for f in $(ls -I "*h5" *log *report *trace-* *config .tests*);
-do
-    mv ${f} ${TEST_DIR}
-done
-popd
-set -e
 
 # Send mail if there was a test failure.
 OUTPUT_LOG=cron_runs/${TIMESTAMP}/test_loop_output.log
 TEST_OUTPUT_LOG=${TEST_OUTPUT_URL}/${OUTPUT_LOG}
-if [ -f ${TEST_DIR}/.tests_failed ]; then
+if [ -f .tests_failed ]; then
     ERR_MSG="The integration tests have failed.  Please see the output for more information:\n${TEST_OUTPUT_LOG}\n\nAdditional information here:\n${TEST_OUTPUT_URL}/cron_runs/${TIMESTAMP}"
 
     echo -e ${ERR_MSG} | mail -r "do-not-reply" -s "Integration test failure : ${TIMESTAMP}" ${MAILING_LIST}
