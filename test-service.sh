@@ -18,36 +18,39 @@ REMOTE=origin
 BRANCH=dev
 cd ${GEOPM_SOURCE}
 if [ -z "$GEOPM_SKIP_CHECKOUT" ]; then
+    git clean -ffdx
     git fetch ${REMOTE}
     git checkout ${BRANCH}
     git reset --hard ${REMOTE}/${BRANCH}
 fi
-git clean -ffdx
 
 # Build and install service and base build locally
-pushd service
-./autogen.sh
-CC=gcc CXX=g++ ./configure --prefix=${GEOPM_INSTALL}
-make -j9
-make -j9 checkprogs
-make install
+./integration/config/build.sh
+cd service
 make rpm
-popd
-./autogen.sh
-source integration/config/build_env.sh
-./configure --prefix=${GEOPM_INSTALL}
-make -j9
-make -j9 checkprogs
-make install
+cd ..
 
 # build tutorial on head node
 ./integration/test/test_tutorial_base.sh
 
 # Run the GEOPM HPC Runtime integration tests
-test_dir=$(mktemp -d -p${GEOPM_WORKDIR} test-service-$(date +%Y-%m-%d)-XXXXX)
-cd ${test_dir}
+TEST_DIR=$(mktemp -d -p${GEOPM_WORKDIR} test-service-$(date +%Y-%m-%d)-XXXXX)
+chmod 755 ${TEST_DIR}
+ln -sfn ${TEST_DIR} $(dirname ${TEST_DIR})/latest
+
+cd ${TEST_DIR}
 sbatch --wait ${GEOPM_TEST_SBATCH}
 
-echo '######################################################################'
-echo '# SUCCESS: test-service.sh '$(date)
-echo '######################################################################'
+ERR=$?
+MSG="\n######################################################################\n"
+if [ "${ERR}" -eq 0 ]; then
+    MSG+="# SUCCESS: test-service.sh $(date) \n"
+else
+    MSG+="# FAILURE: test-service.sh $(date) \n"
+fi
+MSG+="######################################################################\n"
+MSG+="Results available here: ${TEST_OUTPUT_URL}/cron_runs/${TEST_DIR##*/}"
+
+echo ${MSG}
+notify.sh "test-service" "${MSG}"
+
