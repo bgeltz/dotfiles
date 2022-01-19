@@ -13,6 +13,7 @@ if [ "${1}" == "gnu" ]; then
     # Set LD_LIBARY_PATH and PATH since the GNU run is performed without 'make install'
     export LD_LIBRARY_PATH=${GEOPM_SOURCE}/service/.libs:${GEOPM_SOURCE}/.libs:${LD_LIBRARY_PATH}
     export PATH=${GEOPM_SOURCE}/service/.libs:${GEOPM_SOURCE}/.libs:${PATH}
+    export PYTHONPATH=${GEOPM_SOURCE}/scripts:${PYTHONPATH}
 elif [ "${1}" == "intel" ]; then
     module purge && module load ohpc
 else
