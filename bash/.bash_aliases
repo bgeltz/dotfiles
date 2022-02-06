@@ -15,23 +15,6 @@ _current_branch_pretty ()
     echo ${b:+(${b})}
 }
 
-review(){
-    EMAILS="r=christopher.m.cantalupo@intel.com,"
-    EMAILS+="r=diana.r.guttman@intel.com,"
-    EMAILS+="r=brandon.baker@intel.com,"
-    EMAILS+="r=ali.mohammad@intel.com,"
-    EMAILS+="r=daniel1.wilson@intel.com" # NOTE THE COMMA ABOVE!
-    PUSH_OPTIONS='ready,publish-comments'
-    echo "git push gerrithub ${1}:refs/for/dev%${PUSH_OPTIONS},${EMAILS}"
-    git push gerrithub ${1}:refs/for/dev%${PUSH_OPTIONS},${EMAILS}
-}
-
-review_wip(){
-    PUSH_OPTIONS='wip,publish-comments'
-    echo "git push gerrithub ${1}:refs/for/dev%${PUSH_OPTIONS}"
-    git push gerrithub ${1}:refs/for/dev%${PUSH_OPTIONS}
-}
-
 delete_branch(){
     echo "Deleting branch ${1}..."
     git branch -D ${1}

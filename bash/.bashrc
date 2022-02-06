@@ -112,44 +112,20 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 export PATH=\
 "${HOME}/bin:"\
 "${HOME}/.local/bin:"\
-"${HOME}/build/geopm/bin:"\
-"${HOME}/build/msr-tools/bin:"\
-"${HOME}/build/msr-safe/bin:"\
-"${HOME}/build/git/bin:"\
 "${HOME}/build/byobu/bin:"\
 "${HOME}/build/tmux/bin:"\
+"${HOME}/build/weechat/bin:"\
 "${PATH}"
-
-export LD_LIBRARY_PATH=\
-"${HOME}/build/geopm/lib:"\
-"${LD_LIBRARY_PATH}"
-
-export PYTHONPATH=\
-"${PYTHONPATH}:"\
-"${HOME}/build/geopm/lib/python3.6/site-packages"
-
-export MANPATH=\
-"${MANPATH}:"\
-"${HOME}/build/geopm/share/man"
 
 export HISTTIMEFORMAT="%m/%d/%y %T "
 export EDITOR=vim
-export SRC_ROOT=${HOME}/git/geopm
-export GOPATH="$HOME/workspace"
+
 unset GNOME_KEYRING_CONTROL
 unset PROMPT_COMMAND
 export TZ="/usr/share/zoneinfo/US/Pacific"
-#export GIT_PROXY_COMMAND=/usr/bin/socks-gw
-#export USE_CCACHE=1
-#export CCACHE_DIR=/mnt/ssd/ccache
-#export ANDROID_CONSOLE=serial
-#export TERM=xterm-256color
-#export TERM=screen-256color
 
 stty erase '^?'
 stty -ixon
 #ulimit -n 8192
 fortune
 
-# added by travis gem
-[ -f /home/bgeltz/.travis/travis.sh ] && source /home/bgeltz/.travis/travis.sh
