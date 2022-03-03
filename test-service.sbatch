@@ -15,13 +15,25 @@ GEOPM_VERSION=$(cat ${GEOPM_SOURCE}/service/VERSION)
 INSTALL_COMMAND="sudo /usr/sbin/install_service.sh ${GEOPM_VERSION} ${USER}"
 UNINSTALL_COMMAND="sudo /usr/sbin/install_service.sh --remove"
 srun -w ${SLURM_NODELIST} -N ${SLURM_NNODES} ${INSTALL_COMMAND}
+
+# Set initial access to signals and controls
+cat > grant_access.sh <<EOF
+#!/bin/bash
+sudo geopmaccess -a | sudo geopmaccess -w
+sudo geopmaccess -ac | sudo geopmaccess -wc
+EOF
+chmod +x grant_access.sh
+srun -w ${SLURM_NODELIST} -N ${SLURM_NNODES} grant_access.sh
+
 python3 -m unittest discover \
         --top-level-directory ${GEOPM_SOURCE} \
         --start-directory ${GEOPM_SOURCE}/integration/test \
         --pattern 'test_*.py' \
         --verbose >& test-service.log
 ERR=$?
+
 srun -w ${SLURM_NODELIST} -N ${SLURM_NNODES} ${UNINSTALL_COMMAND}
+
 if [ "${ERR}" -eq 0 ]; then
     echo "SUCCESS"
     exit 0
