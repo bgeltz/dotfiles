@@ -6,7 +6,7 @@ if [ -f ${HOME}/.geopmrc ]; then
     source ${HOME}/.geopmrc
 fi
 
-LOG_DIR=${HOME}/public_html/build_logs/pip.$(date +%F_%H%M).log
+LOG_DIR=${HOME}/public_html/build_logs/$(date +%F_%H)
 mkdir -p ${LOG_DIR}
 
 rm -fr ${HOME}/.local
