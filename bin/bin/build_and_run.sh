@@ -19,7 +19,6 @@ get_pr(){
 
 get_pull_requests(){
     # USAGE: get_pr <GITHUB_PR_NUMBER>
-    get_pr 2061
     return
 }
 
@@ -50,7 +49,7 @@ rm -fr ${HOME}/.cache
 # curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py > ${TEST_DIR}/pip.log 2>&1
 # python3 get-pip.py --user > ${TEST_DIR}/pip.log 2>&1
 python3 -m pip install --user --ignore-installed --upgrade pip setuptools wheel pep517 >> ${TEST_DIR}/pip.log 2>&1 && \
-# python3 -m pip install --user --upgrade -r service/requirements.txt >> ${TEST_DIR}/pip.log 2>&1 && \ # Intentionally commented out, should be satisfied by system reqs only
+python3 -m pip install --user --upgrade -r service/requirements.txt >> ${TEST_DIR}/pip.log 2>&1 && \
 python3 -m pip install --user --ignore-installed --upgrade -r scripts/requirements.txt >> ${TEST_DIR}/pip.log 2>&1
 RC=$?
 if [ ${RC} -ne 0 ]; then
@@ -112,7 +111,7 @@ if [ -f .tests_failed ]; then
     notify.sh "Integration test failure : ${TIMESTAMP}" "${ERR_MSG}"
 
     echo "Email sent."
-    # exit 1 # Since the integration tests are failing because of the cherrypick(), do not exit.
+    # exit 1 # Try to generate coverage even if there was a failure
 else
     # Get skipped tests
     LOCAL_LOG=~/public_html/${OUTPUT_LOG}
@@ -172,7 +171,7 @@ lcov --capture --initial ${DIRECTORY_LIST} --output-file base_coverage.info --no
 # Run integration tests
 sbatch integration_batch.sh gnu once
 echo "Integration tests launched via sbatch.  Sleeping..."
-while [ ! -f ${GEOPM_SOURCE}/integration/test/.tests_complete ]; do
+while [ ! -f ${GEOPM_SOURCE}/.tests_complete ]; do
     sleep 5
 done
 echo "Integration tests complete."
