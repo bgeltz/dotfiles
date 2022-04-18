@@ -1,5 +1,18 @@
 #!/bin/bash -l
 
+reset_pr_test(){
+    git switch -C pr-test
+    git reset --hard origin/dev
+}
+
+get_pr(){
+    git fetch -f origin pull/${1}/head:pr-${1}
+    git checkout pr-${1}
+    git rebase pr-test
+    git checkout pr-test
+    git reset --hard pr-${1}
+}
+
 echo '######################################################################'
 echo '# BEGIN: test-service.sh '$(date)
 echo '######################################################################'
@@ -19,9 +32,11 @@ BRANCH=dev
 cd ${GEOPM_SOURCE}
 if [ -z "$GEOPM_SKIP_CHECKOUT" ]; then
     git clean -ffdx
-    git fetch ${REMOTE}
+    git fetch -f ${REMOTE}
     git checkout ${BRANCH}
     git reset --hard ${REMOTE}/${BRANCH}
+    # reset_pr_test
+    # get_pr 2193
 fi
 
 # Build and install service and base build locally
