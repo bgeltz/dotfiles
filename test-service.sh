@@ -39,6 +39,10 @@ if [ -z "$GEOPM_SKIP_CHECKOUT" ]; then
     # get_pr 2193
 fi
 
+# Install py reqs
+# Logs go to ~/public_html/build_logs/pip*
+install_py_reqs.sh
+
 # Build and install service and base build locally
 ./integration/config/build.sh
 cd service

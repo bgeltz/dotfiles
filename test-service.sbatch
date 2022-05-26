@@ -30,7 +30,7 @@ python3 -m unittest discover \
         --top-level-directory ${GEOPM_SOURCE} \
         --start-directory ${GEOPM_SOURCE}/integration/test \
         --pattern 'test_*.py' \
-        --verbose >& test-service.log
+        --verbose &>> test-service.log
 ERR=$?
 
 if [ "${ERR}" -eq 0 ]; then
@@ -38,7 +38,7 @@ if [ "${ERR}" -eq 0 ]; then
 			--top-level-directory ${GEOPM_SOURCE} \
 			--start-directory ${GEOPM_SOURCE}/service/integration/test \
 			--pattern 'test_*.py' \
-			--verbose >& test-service.log
+			--verbose &>> test-service.log
 	ERR=$?
 fi
 # TODO Rebuild the compute image again with the latest install_service.sh
