@@ -3,6 +3,7 @@
 #SBATCH -t 12:00:00
 #SBATCH -o test-service.sbatch.%j.log
 #SBATCH -e test-service.sbatch.%j.err
+#SBATCH --reservation=maint
 
 source ${HOME}/geopm/integration/config/run_env.sh
 
