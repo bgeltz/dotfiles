@@ -90,8 +90,6 @@ fi
 if [ "$color_prompt" = yes ]; then
     PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
 else
-#    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
-    #PS1='[${debian_chroot:+($debian_chroot)}\u@\h \W]\$ '
     PS1="[${debian_chroot:+($debian_chroot)}\u@\h \W]\[\033[33m\]\$(_current_branch_pretty)\[\033[00m\]\$ "
 fi
 unset color_prompt force_color_prompt
@@ -115,17 +113,17 @@ export PATH=\
 "${HOME}/build/byobu/bin:"\
 "${HOME}/build/tmux/bin:"\
 "${HOME}/build/weechat/bin:"\
+"${HOME}/build/msr-tools/bin:"\
+"${HOME}/build/msr-safe/bin:"\
+"${HOME}/build/git/bin:"\
+"/usr/lib/ccache:"\
 "${PATH}"
 
 export HISTTIMEFORMAT="%m/%d/%y %T "
 export EDITOR=vim
-
 unset GNOME_KEYRING_CONTROL
 unset PROMPT_COMMAND
 export TZ="/usr/share/zoneinfo/US/Pacific"
 
 stty erase '^?'
 stty -ixon
-#ulimit -n 8192
-fortune
-
