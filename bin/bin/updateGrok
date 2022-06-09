@@ -1,14 +1,13 @@
 #!/bin/bash
 
 # HTML page: /var/lib/tomcat7/webapps/source/index_body.html
-set -e
+set -ex
 
 update(){
     cd /var/opengrok/src/${1}
     git clean -fdx
     git fetch --all
-    git checkout ${2}
-    git reset --hard origin/${2}
+    git checkout -B ${3} ${2}/${3}
 }
 
 generate_dox(){
@@ -19,21 +18,20 @@ generate_dox(){
     git clean -fdx
 }
 
-update geopm dev
-update theta-tutorial master
-update msr-safe main
-update ohpc_current obs/OpenHPC_1.3.6_Factory
-update ohpc_next obs/OpenHPC_1.3.7_Factory
-update slurm master
-update HACC_v1.5_Theta master
-update gromacs-2019.3 master
+# update <DIR> <REMOTE> <BRANCH>
+update geopm origin dev
+update geopm-branch bgeltz-public issue-1860
+update geopm-private origin private
+update msr-safe origin main
 
-generate_dox geopm
+# generate_dox geopm
 
 # Index every project under /var/opengrok/src
 opengrok-indexer -J=-Djava.util.logging.config.file=/var/opengrok/logging.properties \
+    -J=-Djava.net.useSystemProxies=true \
     -a /var/opengrok/dist/lib/opengrok.jar -- \
     -c /home/brad/build/uctags/bin/ctags \
     -s /var/opengrok/src -d /var/opengrok/data -H -P -S -G \
     -W /var/opengrok/etc/configuration.xml -U http://localhost:8080/source
 
+# New tomcat: /usr/share/apache-tomcat-10.0.8
