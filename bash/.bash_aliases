@@ -110,6 +110,11 @@ get_pr(){
     git reset --hard pr-${1}
 }
 
+wwi(){ # where was I
+  vim -p $(git status --porcelain | awk '{print $2}')
+}
+
+
 # Git aliases
 alias gs='git status'
 alias gd='git diff'
