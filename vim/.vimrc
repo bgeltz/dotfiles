@@ -13,7 +13,7 @@ set foldmethod=indent   "fold based on indent
 set foldnestmax=10      "deepest fold is 10 levels
 set nofoldenable        "dont fold by default
 set foldlevel=1         "this is just what i use
-set updatetime=1250
+set updatetime=100
 set splitbelow
 set splitright
 set visualbell
@@ -114,3 +114,8 @@ autocmd FileChangedShellPost *
   \ echohl WarningMsg | echo "File changed on disk. Buffer reloaded." | echohl None
 
 let @q = 'Oimport codecode.interact(local=dict(globals(), **locals()))'
+
+" BRG new
+set signcolumn=yes
+highlight! link SignColumn LineNr
+" let g:gitgutter_set_sign_backgrounds = 1
