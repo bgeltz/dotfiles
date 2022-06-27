@@ -20,6 +20,11 @@ else
     exit 1 # Invalid module list requested
 fi
 
+while [ ! -d "${GEOPM_INSTALL}" ] ; do
+    echo "Waiting for GEOPM_INSTALL..."
+    sleep 30
+done
+
 if [ "${2}" == "once" ]; then
     python3 -m unittest discover \
             --top-level-directory ${GEOPM_SOURCE} \
