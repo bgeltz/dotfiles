@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -l
 
 # HTML page: /var/lib/tomcat7/webapps/source/index_body.html
 set -ex
@@ -20,7 +20,7 @@ generate_dox(){
 
 # update <DIR> <REMOTE> <BRANCH>
 update geopm origin dev
-update geopm-branch bgeltz-public issue-1860
+# update geopm-branch bgeltz-public issue-1860
 update geopm-private origin private
 update msr-safe origin main
 
