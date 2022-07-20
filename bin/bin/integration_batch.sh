@@ -16,14 +16,14 @@ if [ "${1}" == "gnu" ]; then
     export PYTHONPATH=${GEOPM_SOURCE}/scripts:${GEOPM_SOURCE}/service:${PYTHONPATH}
 elif [ "${1}" == "intel" ]; then
     module purge && module load ohpc
+
+    while [ ! -d "${GEOPM_INSTALL}" ] ; do
+        echo "Waiting for GEOPM_INSTALL..."
+        sleep 30
+    done
 else
     exit 1 # Invalid module list requested
 fi
-
-while [ ! -d "${GEOPM_INSTALL}" ] ; do
-    echo "Waiting for GEOPM_INSTALL..."
-    sleep 30
-done
 
 if [ "${2}" == "once" ]; then
     python3 -m unittest discover \
