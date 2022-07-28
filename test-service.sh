@@ -16,7 +16,6 @@ get_pr(){
 echo '######################################################################'
 echo '# BEGIN: test-service.sh '$(date)
 echo '######################################################################'
-set -e
 set -x
 
 module purge
@@ -35,8 +34,9 @@ if [ -z "$GEOPM_SKIP_CHECKOUT" ]; then
     git fetch -f ${REMOTE}
     git checkout ${BRANCH}
     git reset --hard ${REMOTE}/${BRANCH}
+    # Uncomment BOTH of the following lines when cherry-picking PRs
     # reset_pr_test
-    # get_pr 2193
+    # get_pr 2428
 fi
 
 # Install py reqs
