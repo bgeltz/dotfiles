@@ -116,6 +116,7 @@ export PATH=\
 "${HOME}/build/msr-tools/bin:"\
 "${HOME}/build/msr-safe/bin:"\
 "${HOME}/build/git/bin:"\
+"${HOME}/build/stow/bin:"\
 "/usr/lib/ccache:"\
 "${PATH}"
 

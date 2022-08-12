@@ -15,6 +15,8 @@
 # limitations under the License.
 #
 
+set -e
+
 if [ -d "vim/.vim/autoload" ]; then
     echo "vim/.vim/autoload already exists!  Exitting..."
     exit 1
@@ -27,7 +29,7 @@ fi
 
 mkdir -p vim/.vim/autoload
 pushd vim/.vim/autoload
-curl -LSso pathogen.vim https://tpo.pe/pathogen.vim
+curl -LSso pathogen.vim https://raw.githubusercontent.com/tpope/vim-pathogen/master/autoload/pathogen.vim
 popd
 
 mkdir -p vim/.vim/bundle
