@@ -1,6 +1,6 @@
 #!/bin/bash -l
 
-set -ex
+set -x
 
 MAILING_LIST=${MAILING_LIST}
 
@@ -51,6 +51,7 @@ rm -fr ${HOME}/.cache
 python3 -m pip install --user --ignore-installed --upgrade pip setuptools wheel pep517 >> ${TEST_DIR}/pip.log 2>&1 && \
 python3 -m pip install --user --upgrade -r service/requirements.txt >> ${TEST_DIR}/pip.log 2>&1 && \
 python3 -m pip install --user --ignore-installed --upgrade -r scripts/requirements.txt >> ${TEST_DIR}/pip.log 2>&1
+python3 -m pip install --user --ignore-installed --upgrade -r integration/requirements.txt >> ${TEST_DIR}/pip.log 2>&1
 RC=$?
 if [ ${RC} -ne 0 ]; then
     TEST_LOG="${TEST_OUTPUT_URL}/cron_runs/${TIMESTAMP}/pip.log"
