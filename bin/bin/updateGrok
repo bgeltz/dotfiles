@@ -18,6 +18,11 @@ generate_dox(){
     git clean -fdx
 }
 
+# Verify ssh-agent is running
+set +e
+. start_ssh_agent.sh
+set -e
+
 # update <DIR> <REMOTE> <BRANCH>
 update geopm origin dev
 # update geopm-branch bgeltz-public issue-1860
@@ -27,7 +32,7 @@ update msr-safe origin main
 # generate_dox geopm
 
 # Index every project under /var/opengrok/src
-opengrok-indexer -J=-Djava.util.logging.config.file=/var/opengrok/logging.properties \
+opengrok-indexer -J=-Djava.util.logging.config.file=/var/opengrok/etc/logging.properties \
     -J=-Djava.net.useSystemProxies=true \
     -a /var/opengrok/dist/lib/opengrok.jar -- \
     -c /home/brad/build/uctags/bin/ctags \
