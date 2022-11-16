@@ -3,6 +3,7 @@
 #SBATCH -t 12:00:00
 #SBATCH -o test.sbatch.%j.log
 #SBATCH -e test-service.sbatch.%j.err
+#SBATCH --reboot
 
 LOG_FILE=test_output.log
 
