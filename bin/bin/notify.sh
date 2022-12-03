@@ -8,5 +8,5 @@ if [ -z ${SLACK_HOOK+x} ]; then
     exit 0
 fi
 
-curl -X POST -H 'Content-type: application/json' --data "{'text':'*${1}*: ${2}'}" ${SLACK_HOOK}
+curl -X POST -H 'Content-type: application/json' --data "{'text':'*${TITLE}*: ${MSG}'}" ${SLACK_HOOK}
 
