@@ -17,6 +17,7 @@ set updatetime=100
 set splitbelow
 set splitright
 set visualbell
+set breakindent
 let g:gitgutter_terminal_reports_focus=0
 nnoremap <CR> :noh<CR><CR>
 :command W noa w
