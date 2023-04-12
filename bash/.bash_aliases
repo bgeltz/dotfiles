@@ -179,3 +179,7 @@ mll() (
   (($#)) && exec ls --color=auto  -h --group-directories-first -ldU -- "$@"
 )
 
+# RPM aliases
+rpmunpack() {
+    rpm2cpio ${1} | cpio -idmv
+}
