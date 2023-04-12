@@ -26,3 +26,5 @@
     autosetupmerge = always
 [rebase]
 	autosquash = true
+[init]
+	defaultBranch = main
