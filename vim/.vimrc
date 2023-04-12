@@ -1,122 +1,85 @@
+" Stock vim configuration
 filetype plugin indent on
-colorscheme ron
 set statusline+=%F\ %l\:%c
-set nu
-set hls
-set laststatus=2
-set tabstop=4
-set shiftwidth=4
-set expandtab
-set scrolloff=5
-set ai
-set foldmethod=indent   "fold based on indent
-set foldnestmax=10      "deepest fold is 10 levels
-set nofoldenable        "dont fold by default
-set foldlevel=1         "this is just what i use
+set nu                  " Line numbering
+set hls                 " Highlight all search matches
+set laststatus=2        " Always display the status line
+set tabstop=4           " A tab is 4 spaces
+set shiftwidth=4        " Spaces in 1 level of indentation
+set expandtab           " Tab key expands to 4 spaces
+set scrolloff=5         " Scroll offset of 5 lines
+set autoindent          " Enable auto indent
+set foldmethod=indent   " Fold based on indent
+set foldnestmax=10      " Deepest fold is 10 levels
+set nofoldenable        " Don't fold by default
+set foldlevel=1        
 set updatetime=100
-set splitbelow
-set splitright
-set visualbell
-set breakindent
-let g:gitgutter_terminal_reports_focus=0
-nnoremap <CR> :noh<CR><CR>
-:command W noa w
-
-" Uncomment the following blocks to enable Ctrl-J HexMode
-" nnoremap <C-J> :Hexmode<CR>
-" inoremap <C-J> <Esc>:Hexmode<CR>
-" vnoremap <C-J> :<C-U>Hexmode<CR>
-
-" " ex command for toggling hex mode - define mapping if desired
-" command -bar Hexmode call ToggleHex()
-
-" " helper function to toggle hex mode
-" function ToggleHex()
-"   " hex mode should be considered a read-only operation
-"   " save values for modified and read-only for restoration later,
-"   " and clear the read-only flag for now
-"   let l:modified=&mod
-"   let l:oldreadonly=&readonly
-"   let &readonly=0
-"   let l:oldmodifiable=&modifiable
-"   let &modifiable=1
-"   if !exists("b:editHex") || !b:editHex
-"     " save old options
-"     let b:oldft=&ft
-"     let b:oldbin=&bin
-"     " set new options
-"     setlocal binary " make sure it overrides any textwidth, etc.
-"     silent :e " this will reload the file without trickeries
-"               "(DOS line endings will be shown entirely )
-"     let &ft="xxd"
-"     " set status
-"     let b:editHex=1
-"     " switch to hex editor
-"     %!xxd
-"   else
-"     " restore old options
-"     let &ft=b:oldft
-"     if !b:oldbin
-"       setlocal nobinary
-"     endif
-"     " set status
-"     let b:editHex=0
-"     " return to normal editing
-"     %!xxd -r
-"   endif
-"   " restore values for modified and read only state
-"   let &mod=l:modified
-"   let &readonly=l:oldreadonly
-"   let &modifiable=l:oldmodifiable
-" endfunction
-
-execute pathogen#infect()
-syntax on
-filetype plugin on
-
-let g:NERDSpaceDelims = 1
-let g:NERDCompactSexyComs = 1
-let g:NERDDefaultAlign = 'left'
-set statusline+=%{fugitive#statusline()}
-
+set splitbelow          " Vertical splits go below
+set splitright          " Horizontal splits go to the right
+set visualbell          " Disable termial beeps
+set breakindent         " Indent word-wrapped lines
 autocmd BufWritePre * %s/\s\+$//e
 
-let g:rainbow_active = 1
-let g:rainbow_conf = {
-    \   'guifgs': ['royalblue3', 'darkorange3', 'seagreen3', 'firebrick'],
-    \   'ctermfgs': ['lightblue', 'lightyellow', 'lightcyan', 'lightmagenta'],
-    \   'operators': '_,_',
-    \   'parentheses': ['start=/(/ end=/)/ fold', 'start=/\[/ end=/\]/ fold', 'start=/{/ end=/}/ fold'],
-    \   'separately': {
-    \       '*': {},
-    \       'tex': {
-    \           'parentheses': ['start=/(/ end=/)/', 'start=/\[/ end=/\]/'],
-    \       },
-    \       'lisp': {
-    \           'guifgs': ['royalblue3', 'darkorange3', 'seagreen3', 'firebrick', 'darkorchid3'],
-    \       },
-    \       'vim': {
-    \           'parentheses': ['start=/(/ end=/)/', 'start=/\[/ end=/\]/', 'start=/{/ end=/}/ fold', 'start=/(/ end=/)/ containedin=vimFuncBody', 'start=/\[/ end=/\]/ containedin=vimFuncBody', 'start=/{/ end=/}/ fold containedin=vimFuncBody'],
-    \       },
-    \       'html': {
-    \           'parentheses': ['start=/\v\<((area|base|br|col|embed|hr|img|input|keygen|link|menuitem|meta|param|source|track|wbr)[ >])@!\z([-_:a-zA-Z0-9]+)(\s+[-_:a-zA-Z0-9]+(\=("[^"]*"|'."'".'[^'."'".']*'."'".'|[^ '."'".'"><=`]*))?)*\>/ end=#</\z1># fold'],
-    \       },
-    \       'css': 0,
-    \   }
-    \}
+" Command configration
 
-" Trigger `autoread` when files changes on disk
-" https://unix.stackexchange.com/questions/149209/refresh-changed-content-of-file-opened-in-vim/383044#383044
-" https://vi.stackexchange.com/questions/13692/prevent-focusgained-autocmd-running-in-command-line-editing-mode
-autocmd FocusGained,BufEnter,CursorHold,CursorHoldI * if mode() != 'c' | checktime | endif
-" Notification after file change
-" https://vi.stackexchange.com/questions/13091/autocmd-event-for-autoread
+"   Pressing ENTER will remove the hls highlighting
+nnoremap <CR> :noh<CR><CR>
+
+"   Writing a file with ":W" will not invoke the BufWritePre to
+"   strip trailing whitespace.
+:command W noa w
+
+"   Use "@q" to inject code to drop into the Python debugger
+"   above the current line.
+let @q = 'Oimport codecode.interact(local=dict(globals(), **locals()))'
+
+"   https://unix.stackexchange.com/a/383044
+"   Triger `autoread` when files changes on disk
+"     https://unix.stackexchange.com/questions/149209/refresh-changed-content-of-file-opened-in-vim/383044#383044
+"     https://vi.stackexchange.com/questions/13692/prevent-focusgained-autocmd-running-in-command-line-editing-mode
+autocmd FocusGained,BufEnter,CursorHold,CursorHoldI *
+    \ if mode() !~ '\v(c|r.?|!|t)' && getcmdwintype() == '' | checktime | endif
+
+"   Notification after file change
+"     https://vi.stackexchange.com/questions/13091/autocmd-event-for-autoread
 autocmd FileChangedShellPost *
   \ echohl WarningMsg | echo "File changed on disk. Buffer reloaded." | echohl None
 
-let @q = 'Oimport codecode.interact(local=dict(globals(), **locals()))'
+" END Stock vim configuration
 
-" BRG new
+" PLUGIN CONFIGURATION
+
+" Automatically install vim-plug
+" https://github.com/junegunn/vim-plug/wiki/tips#automatic-installation
+let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
+if empty(glob(data_dir . '/autoload/plug.vim'))
+  silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
+" Specify plugins
+" https://github.com/junegunn/vim-plug#example
+call plug#begin()
+
+Plug 'tpope/vim-fugitive'      " https://github.com/tpope/vim-fugitive
+Plug 'preservim/nerdcommenter' " https://github.com/preservim/nerdcommenter
+Plug 'luochen1990/rainbow'     " https://github.com/luochen1990/rainbow
+Plug 'airblade/vim-gitgutter'  " https://github.com/airblade/vim-gitgutter
+
+call plug#end()
+
+" vim-fugative options
+set statusline+=%{FugitiveStatusline()}
+
+" NERD Commenter Options
+let g:NERDSpaceDelims = 1
+let g:NERDCompactSexyComs = 1
+let g:NERDDefaultAlign = 'left'
+
+" Rainbow parens Options
+let g:rainbow_active = 1
+
+" vim-gitgutter Options
+let g:gitgutter_terminal_reports_focus=0
 set signcolumn=yes
 highlight! link SignColumn LineNr
-" let g:gitgutter_set_sign_backgrounds = 1
