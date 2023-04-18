@@ -111,6 +111,15 @@ get_pr(){
     git reset --hard pr-${1}
 }
 
+wwi(){ # where was I
+  vim -p $(git status --porcelain | awk '{print $2}')
+}
+
+vcommit(){
+    COMMIT=${1-HEAD}
+    vim -p $(git diff-tree --no-commit-id --name-only -r ${COMMIT})
+}
+
 # Git aliases
 alias gs='git status'
 alias gd='git diff'
