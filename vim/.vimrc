@@ -12,13 +12,14 @@ set autoindent          " Enable auto indent
 set foldmethod=indent   " Fold based on indent
 set foldnestmax=10      " Deepest fold is 10 levels
 set nofoldenable        " Don't fold by default
-set foldlevel=1        
+set foldlevel=1
 set updatetime=100
 set splitbelow          " Vertical splits go below
 set splitright          " Horizontal splits go to the right
 set visualbell          " Disable termial beeps
 set breakindent         " Indent word-wrapped lines
 autocmd BufWritePre * %s/\s\+$//e
+colorscheme brg
 
 " Command configration
 
