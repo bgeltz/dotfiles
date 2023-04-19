@@ -25,7 +25,7 @@ set -e
 
 # update <DIR> <REMOTE> <BRANCH>
 update geopm origin dev
-# update geopm-branch bgeltz-public issue-1860
+update geopm-branch chris-public issue-2728-extended
 update geopm-private origin private
 update msr-safe origin main
 

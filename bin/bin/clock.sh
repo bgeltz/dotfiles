@@ -8,7 +8,8 @@ while : ; do
     # date +%T | figlet -ctW -f mono12 | toilet -t -f term
     # tput op
 
-    date +%T | figlet -ctW -f mono12 | toilet -t -f term -F metal
+    # date +%T | figlet -ctW -f mono12 | toilet -t -f term -F metal
+    date +%T | figlet -ctW -f mono9 | toilet -t -f term -F metal
 
     # date +%T | figlet -ctW -f mono12 | toilet -t -f term -F metal
     # date +%T | figlet -ctW -f ascii12 | toilet -t -f term --metal
