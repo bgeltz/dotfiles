@@ -47,6 +47,7 @@ install_py_reqs.sh
 ./integration/config/build.sh
 cd service
 make rpm
+# rpmbuild_flags='--define "enable_level_zero 1"' make rpm
 cd ..
 
 # build tutorial on head node
