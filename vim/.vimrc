@@ -1,4 +1,4 @@
-" Stock vim configuration
+" BEGIN Stock vim configuration
 filetype plugin indent on
 set statusline+=%F\ %l\:%c
 set nu                  " Line numbering
@@ -18,29 +18,30 @@ set splitbelow          " Vertical splits go below
 set splitright          " Horizontal splits go to the right
 set visualbell          " Disable termial beeps
 set breakindent         " Indent word-wrapped lines
+set tabpagemax=20       " Set max open tabs
 autocmd BufWritePre * %s/\s\+$//e
 colorscheme brg
 
 " Command configration
-
 "   Pressing ENTER will remove the hls highlighting
 nnoremap <CR> :noh<CR><CR>
-
+"   Delete without yanking
+nnoremap <leader>d "_d
+vnoremap <leader>d "_d
+"   Replace selection without yanking
+vnoremap <leader>p "_dP
 "   Writing a file with ":W" will not invoke the BufWritePre to
 "   strip trailing whitespace.
 :command W noa w
-
 "   Use "@q" to inject code to drop into the Python debugger
 "   above the current line.
 let @q = 'Oimport codecode.interact(local=dict(globals(), **locals()))'
-
 "   https://unix.stackexchange.com/a/383044
-"   Triger `autoread` when files changes on disk
+"   Trigger `autoread` when files changes on disk
 "     https://unix.stackexchange.com/questions/149209/refresh-changed-content-of-file-opened-in-vim/383044#383044
 "     https://vi.stackexchange.com/questions/13692/prevent-focusgained-autocmd-running-in-command-line-editing-mode
 autocmd FocusGained,BufEnter,CursorHold,CursorHoldI *
     \ if mode() !~ '\v(c|r.?|!|t)' && getcmdwintype() == '' | checktime | endif
-
 "   Notification after file change
 "     https://vi.stackexchange.com/questions/13091/autocmd-event-for-autoread
 autocmd FileChangedShellPost *
