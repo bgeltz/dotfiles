@@ -3,7 +3,7 @@
 #SBATCH -t 12:00:00
 #SBATCH --reboot
 
-loop_iteration=${SLURM_ARRAY_TASK_ID}
+loop_iteration=${SLURM_ARRAY_TASK_ID:-0}
 mkdir ${loop_iteration}
 cd ${loop_iteration}
 
