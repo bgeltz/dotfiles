@@ -114,6 +114,7 @@ export PATH=\
 "${HOME}/build/lcov/bin:"\
 "${PATH}"
 
+export PYTHONSTARTUP="${HOME}/.python_startup"
 export HISTTIMEFORMAT="%m/%d/%y %T "
 export EDITOR=vim
 unset GNOME_KEYRING_CONTROL

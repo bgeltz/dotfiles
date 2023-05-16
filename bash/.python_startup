@@ -1,0 +1,8 @@
+#!/usr/bin/env python3
+
+import readline
+
+def history():
+    for ii in range(readline.get_current_history_length()):
+        print(readline.get_history_item(ii + 1))
+
