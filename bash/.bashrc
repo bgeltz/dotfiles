@@ -123,4 +123,3 @@ export TZ="/usr/share/zoneinfo/US/Pacific"
 stty erase '^?'
 stty -ixon
 
-. start_ssh_agent.sh
