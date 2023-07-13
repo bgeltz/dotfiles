@@ -7,6 +7,8 @@ loop_iteration=${SLURM_ARRAY_TASK_ID:-0}
 mkdir ${loop_iteration}
 cd ${loop_iteration}
 
+install_service.sh
+
 source ${HOME}/geopm/integration/config/run_env.sh
 
 if [ "${1}" == "gnu" ]; then
@@ -41,6 +43,10 @@ if [ "${rc}" -eq 0 ]; then
             --verbose
     rc=$?
 fi
+
+# Restore the "gold" version of the RPMs
+uninstall_service.sh
+install_service_gold.sh
 
 echo "Loop iteration $loop_iteration rc=$rc at $(date)"
 if [ "${rc}" -eq 0 ]; then
