@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Requires pytest, pytest-cov
+# python3 -m pip install --user pytest pytest-cov
+
 set -ex
 
 source ~/.geopmrc
@@ -8,17 +11,23 @@ TEST_DIR=${GEOPM_SOURCE}/service
 # REPORT_DIR=${HOME}/public_html/pytest_coverage
 REPORT_DIR=${HOME}/public_html/testing
 REMOTE=origin
-BRANCH=dev
+# BRANCH=dev
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
 
 cd ${TEST_DIR}
-git clean -ffdx
+# git clean -ffdx
+
+# You have to run configure to ensure *.py.in files are processed (e.g. schemas.py.in)
+# ./autogen.sh
+# ./configure.sh
 
 # git checkout ${BRANCH}
 # git reset --hard ${REMOTE}/${BRANCH}
 
 # Checkout desired branch/commit at sprint start
-SPRINT_START_DATE="2022-02-02"
-START_DIR=${REPORT_DIR}/${SPRINT_START_DATE}_0000
+# SPRINT_START_DATE="2022-02-02"
+# START_DIR=${REPORT_DIR}/${SPRINT_START_DATE}_0000
+START_DIR=${REPORT_DIR}/${BRANCH}_$(date +%F_%H%M)
 mkdir -p ${START_DIR}
 
 # # https://stackoverflow.com/questions/6990484/how-to-checkout-in-git-by-date
