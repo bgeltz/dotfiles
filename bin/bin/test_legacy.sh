@@ -72,7 +72,7 @@ check_rc "Installing python requirements with pip failed" "${LOG_DIR}/pip.log"
 # DEBUG build w/Intel for maximum unit test coverage
 GEOPM_GLOBAL_CONFIG_OPTIONS="--enable-debug" \
 GEOPM_BASE_CONFIG_OPTIONS="--enable-beta" \
-GEOPM_SERVICE_CONFIG_OPTIONS="--enable-levelzero" \
+GEOPM_SERVICE_CONFIG_OPTIONS="--enable-levelzero --disable-io-uring" \
 GEOPM_RUN_TESTS=yes \
 ./integration/config/build.sh \
 > ${LOG_DIR}/build_intel_debug.out \
@@ -82,7 +82,7 @@ check_rc "Intel/debug build or 'make check' failed" "${LOG_DIR}/build_intel_debu
 # RELEASE build w/Intel for integration tests
 git clean -ffdx --quiet
 GEOPM_BASE_CONFIG_OPTIONS="--enable-beta" \
-GEOPM_SERVICE_CONFIG_OPTIONS="--enable-levelzero" \
+GEOPM_SERVICE_CONFIG_OPTIONS="--enable-levelzero --disable-io-uring" \
 ./integration/config/build.sh \
 > ${LOG_DIR}/build_intel_release.out \
 2> ${LOG_DIR}/build_intel_release.err

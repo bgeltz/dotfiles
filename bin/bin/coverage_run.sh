@@ -47,6 +47,7 @@ GEOPM_SKIP_COMPILER_CHECK=yes \
 GEOPM_SKIP_SERVICE_INSTALL=yes \
 GEOPM_SKIP_BASE_INSTALL=yes \
 GEOPM_GLOBAL_CONFIG_OPTIONS="--enable-coverage" \
+GEOPM_SERVICE_CONFIG_OPTIONS="--disable-io-uring" \
 ./integration/config/build.sh \
 > ${LOG_DIR}/build_gnu_release.out \
 2> ${LOG_DIR}/build_gnu_release.err
