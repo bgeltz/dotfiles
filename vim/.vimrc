@@ -25,17 +25,30 @@ colorscheme brg
 " Command configration
 "   Pressing ENTER will remove the hls highlighting
 nnoremap <CR> :noh<CR><CR>
+
 "   Delete without yanking
 nnoremap <leader>d "_d
 vnoremap <leader>d "_d
+
 "   Replace selection without yanking
 vnoremap <leader>p "_dP
+
 "   Writing a file with ":W" will not invoke the BufWritePre to
 "   strip trailing whitespace.
 :command W noa w
+
 "   Use "@q" to inject code to drop into the Python debugger
 "   above the current line.
 let @q = 'Oimport codecode.interact(local=dict(globals(), **locals()))'
+
+"   Use "@w" to analyze CSV files with vim, with the column headers 'frozen'
+"   on the top pane, e.g.:
+"   cut -d\| -f1-4 pipe_delimited_file | column -s '|' -t | vim -
+let @w = ':splitw:resize 1OBOBOBOBOBw'
+
+"   Close other buffers, leave current open
+let @e = ':%bd|e#'
+
 "   https://unix.stackexchange.com/a/383044
 "   Trigger `autoread` when files changes on disk
 "     https://unix.stackexchange.com/questions/149209/refresh-changed-content-of-file-opened-in-vim/383044#383044
