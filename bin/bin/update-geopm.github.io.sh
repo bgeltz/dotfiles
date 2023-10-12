@@ -15,7 +15,7 @@ git reset --hard origin/dev
 cd service
 ./autogen.sh
 ./configure
-make docs
+make -j9 docs
 cd ~/git/geopm.github.io
 cp -rp ~/git/geopm/service/docs/build/html/* .
 cp ~/git/geopm/json_schemas/* .
