@@ -6,11 +6,13 @@ reset_pr_test(){
 }
 
 get_pr(){
+    set -e
     git fetch -f origin pull/${1}/head:pr-${1}
     git checkout pr-${1}
     git rebase pr-test
     git checkout pr-test
     git reset --hard pr-${1}
+    set +e
 }
 
 echo '######################################################################'
@@ -45,6 +47,7 @@ install_py_reqs.sh
 
 # Build and install service and base build locally
 GEOPM_SERVICE_CONFIG_OPTIONS="--disable-io-uring" ./integration/config/build.sh
+make -j9 checkprogs
 cd service
 make rpm
 # rpmbuild_flags='--define "enable_level_zero 1"' make rpm
