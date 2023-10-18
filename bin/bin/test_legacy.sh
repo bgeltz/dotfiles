@@ -88,6 +88,12 @@ GEOPM_SERVICE_CONFIG_OPTIONS="--enable-levelzero --disable-io-uring" \
 2> ${LOG_DIR}/build_intel_release.err
 check_rc "Intel/release build failed" "${LOG_DIR}/build_intel_release.err"
 
+# Build integration test binaries
+make -j9 checkprogs \
+>> ${LOG_DIR}/build_intel_release.out \
+2>> ${LOG_DIR}/build_intel_release.err
+check_rc "Intel/release build checkprogs target failed" "${LOG_DIR}/build_intel_release.err"
+
 # Build the tutorials
 ./integration/test/test_tutorial_base.sh > ${LOG_DIR}/build_tutorials.log 2>&1
 check_rc "Tutorial build failed" "${LOG_DIR}/build_tutorials.log"

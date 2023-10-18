@@ -45,8 +45,10 @@ if [ "${rc}" -eq 0 ]; then
 fi
 
 # Restore the "gold" version of the RPMs
+set -x
 uninstall_service.sh
 install_service_gold.sh
+set +x
 
 echo "Loop iteration $loop_iteration rc=$rc at $(date)"
 if [ "${rc}" -eq 0 ]; then
