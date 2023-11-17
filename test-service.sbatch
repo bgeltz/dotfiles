@@ -45,7 +45,7 @@ fi
 srun -w ${SLURM_NODELIST} -N ${SLURM_NNODES} ${UNINSTALL_COMMAND}
 
 # Restore the "gold" version of the RPMs
-~bgeltz/bin/install_service_gold.sh
+~test/bin/install_service_gold.sh
 
 if [ "${ERR}" -eq 0 ]; then
     echo "SUCCESS"
