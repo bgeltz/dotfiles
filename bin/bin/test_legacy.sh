@@ -45,7 +45,9 @@ module load ohpc ccache
 export TIMESTAMP=$(date +\%F_\%H\%M)
 export LOG_DIR=${HOME}/public_html/cron_runs/${TIMESTAMP}
 mkdir -p ${LOG_DIR}
+check_rc "Output directory creation failed.  The disk is full." "/"
 ln -sfn ${LOG_DIR} $(dirname ${LOG_DIR})/latest
+check_rc "Symlink to output directory creation failed.  The disk is full." "/"
 
 # Setup build environment
 source ${HOME}/geopm/integration/config/build_env.sh
