@@ -49,7 +49,7 @@ install_py_reqs.sh
 GEOPM_SERVICE_CONFIG_OPTIONS="--disable-io-uring" ./integration/config/build.sh
 make -j9 checkprogs
 cd service
-make rpm
+rpmbuild_flags='--define "disable_io_uring 1"' make rpm
 # rpmbuild_flags='--define "enable_level_zero 1"' make rpm
 cd ..
 
