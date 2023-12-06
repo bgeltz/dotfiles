@@ -102,7 +102,7 @@ check_rc "Tutorial build failed" "${LOG_DIR}/build_tutorials.log"
 
 # Build the service RPM
 cd service
-make rpm > ${LOG_DIR}/build_rpm.log 2>&1
+rpmbuild_flags='--define "disable_io_uring 1"' make rpm  > ${LOG_DIR}/build_rpm.log 2>&1
 check_rc "rpm build failed" "${LOG_DIR}/build_rpm.log"
 cd ..
 
