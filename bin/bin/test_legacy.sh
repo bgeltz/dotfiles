@@ -39,7 +39,7 @@ echo '######################################################################'
 
 # Load modules
 module purge
-module load ohpc ccache
+module load ohpc
 
 # Setup output dirs
 export TIMESTAMP=$(date +\%F_\%H\%M)
@@ -90,20 +90,16 @@ GEOPM_SERVICE_CONFIG_OPTIONS="--enable-levelzero --disable-io-uring" \
 2> ${LOG_DIR}/build_intel_release.err
 check_rc "Intel/release build failed" "${LOG_DIR}/build_intel_release.err"
 
-# Build integration test binaries
-make -j9 checkprogs \
->> ${LOG_DIR}/build_intel_release.out \
-2>> ${LOG_DIR}/build_intel_release.err
-check_rc "Intel/release build checkprogs target failed" "${LOG_DIR}/build_intel_release.err"
+# Build the libgeopmd RPMs
+cd libgeopmd
+rpmbuild_flags='--define "disable_io_uring 1"' make rpm  > ${LOG_DIR}/build_libgeopmd_rpm.log 2>&1
+check_rc "libgeopmd rpm build failed" "${LOG_DIR}/build_libgeopmd_rpm.log"
+cd ..
 
-# Build the tutorials
-./integration/test/test_tutorial_base.sh > ${LOG_DIR}/build_tutorials.log 2>&1
-check_rc "Tutorial build failed" "${LOG_DIR}/build_tutorials.log"
-
-# Build the service RPM
-cd service
-rpmbuild_flags='--define "disable_io_uring 1"' make rpm  > ${LOG_DIR}/build_rpm.log 2>&1
-check_rc "rpm build failed" "${LOG_DIR}/build_rpm.log"
+# Build the geopmdpy RPM
+cd geopmdpy
+./make_rpm.sh > ${LOG_DIR}/build_geopmdpy_rpm.log 2>&1
+check_rc "geopmdpy rpm build failed" "${LOG_DIR}/build_geopmdpy_rpm.log"
 cd ..
 
 build_app(){

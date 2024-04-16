@@ -8,6 +8,10 @@ mkdir ${loop_iteration}
 cd ${loop_iteration}
 
 install_service.sh
+if [ "$?" -ne 0 ]; then
+    echo "ERROR: Installing the GEOPM Access Service failed"
+    exit ${rc}
+fi
 
 source ${HOME}/geopm/integration/config/run_env.sh
 
@@ -38,7 +42,7 @@ if [ "${rc}" -eq 0 ]; then
 
     python3 -m unittest discover \
             --top-level-directory ${GEOPM_SOURCE} \
-            --start-directory ${GEOPM_SOURCE}/service/integration/test \
+            --start-directory ${GEOPM_SOURCE}/integration/service/test \
             --pattern 'test_*.py' \
             --verbose
     rc=$?
