@@ -61,7 +61,7 @@ export PATH=${HOME}/build/lcov/bin:${PATH}
 # be captured together, and ultimately have a unified report website at the end
 
 # Initial / baseline lcov
-DIRECTORY_LIST="--directory src --directory test --directory service/src --directory service/test"
+DIRECTORY_LIST="--directory libgeopm/src --directory libgeopm/test --directory libgeopmd/src --directory libgeopmd/test"
 lcov --capture --initial ${DIRECTORY_LIST} \
      --output-file base_coverage.info --no-external \
 > ${LOG_DIR}/coverage.out \
@@ -78,24 +78,30 @@ sbatch --wait test_legacy.sbatch gnu
 cd ${GEOPM_SOURCE}
 
 # Build/run unit tests
-cd service
+cd libgeopmd
 make -j9 checkprogs \
 > ${LOG_DIR}/checkprogs_service.out \
 2> ${LOG_DIR}/checkprogs_service.err
+check_rc "libgeopmd make checkprogs failed" "${LOG_DIR}/checkprogs_service.err"
 
 make check \
 > ${LOG_DIR}/check_service.out \
 2> ${LOG_DIR}/check_service.err
+check_rc "libgeopmd make check failed" "${LOG_DIR}/check_service.err"
 
-cd ..
+cd ../libgeopm
 
 make -j9 checkprogs \
 > ${LOG_DIR}/checkprogs_base.out \
 2> ${LOG_DIR}/checkprogs_base.err
+check_rc "libgeopm make checkprogs failed" "${LOG_DIR}/checkprogs_base.err"
 
 make check \
 > ${LOG_DIR}/checkprogs_base.out \
 2> ${LOG_DIR}/checkprogs_base.err
+check_rc "libgeopm make check failed" "${LOG_DIR}/check_base.err"
+
+cd ..
 
 ######################################################################################
 echo "lcov - Coverage capture" >> ${LOG_DIR}/coverage.out
@@ -103,6 +109,7 @@ lcov --no-external --capture ${DIRECTORY_LIST} \
      --output-file coverage.info \
 > ${LOG_DIR}/coverage.out \
 2> ${LOG_DIR}/coverage.err
+check_rc "lcov coverage capture failed" "${LOG_DIR}/coverage.err"
 
 echo "lcov - Baseline/Coverage combine" >> ${LOG_DIR}/coverage.out
 lcov --rc lcov_branch_coverage=1 \
@@ -110,6 +117,7 @@ lcov --rc lcov_branch_coverage=1 \
      -o combined_coverage.info \
 > ${LOG_DIR}/coverage.out \
 2> ${LOG_DIR}/coverage.err
+check_rc "lcov baseline/coverage combine failed" "${LOG_DIR}/coverage.err"
 
 echo "lcov - Combined coverage filter" >> ${LOG_DIR}/coverage.out
 lcov --rc lcov_branch_coverage=1 \
@@ -119,6 +127,7 @@ lcov --rc lcov_branch_coverage=1 \
      -o filtered_coverage.info \
 > ${LOG_DIR}/coverage.out \
 2> ${LOG_DIR}/coverage.err
+check_rc "lcov filter failed" "${LOG_DIR}/coverage.err"
 
 echo "genhtml - Webpage construction" >> ${LOG_DIR}/coverage.out
 genhtml filtered_coverage.info \
@@ -126,6 +135,7 @@ genhtml filtered_coverage.info \
         --legend -t "$(git describe) w/beta flag" -f \
 > ${LOG_DIR}/coverage.out \
 2> ${LOG_DIR}/coverage.err
+check_rc "lcov webpage construction" "${LOG_DIR}/coverage.err"
 
 # Copy coverage html to date stamped public_html dir
 cp -rp coverage ${LOG_DIR}

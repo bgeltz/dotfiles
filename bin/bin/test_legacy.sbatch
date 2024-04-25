@@ -8,7 +8,8 @@ mkdir ${loop_iteration}
 cd ${loop_iteration}
 
 install_service.sh
-if [ "$?" -ne 0 ]; then
+rc=$?
+if [ "${rc}" -ne 0 ]; then
     echo "ERROR: Installing the GEOPM Access Service failed"
     exit ${rc}
 fi
