@@ -18,7 +18,7 @@ get_pr(){
 echo '######################################################################'
 echo '# BEGIN: test-service.sh '$(date)
 echo '######################################################################'
-set -x
+set -ex
 
 module purge
 module load ohpc ccache
@@ -47,19 +47,24 @@ install_py_reqs.sh
 
 # Build and install service and base build locally
 GEOPM_SERVICE_CONFIG_OPTIONS="--disable-io-uring" ./integration/config/build.sh
-make -j9 checkprogs
-cd service
+
+# Build the libgeopmd RPMs
+cd libgeopmd
 rpmbuild_flags='--define "disable_io_uring 1"' make rpm
 # rpmbuild_flags='--define "enable_level_zero 1"' make rpm
 cd ..
 
-# build tutorial on head node
-./integration/test/test_tutorial_base.sh
+# Build the geopmdpy RPM
+cd geopmdpy
+./make_rpm.sh
+cd ..
 
 # Run the GEOPM HPC Runtime integration tests
 TEST_DIR=$(mktemp -d -p${GEOPM_WORKDIR} test-service-$(date +%Y-%m-%d)-XXXXX)
 chmod 755 ${TEST_DIR}
 ln -sfn ${TEST_DIR} $(dirname ${TEST_DIR})/latest
+
+set +e
 
 cd ${TEST_DIR}
 sbatch --wait ${GEOPM_TEST_SBATCH}

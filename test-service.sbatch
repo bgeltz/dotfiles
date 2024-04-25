@@ -9,21 +9,12 @@ source ${HOME}/geopm/integration/config/run_env.sh
 #export GEOPM_RUN_LONG_TESTS=TRUE
 unset GEOPM_RUN_LONG_TESTS
 
-GEOPM_VERSION=$(cat ${GEOPM_SOURCE}/service/VERSION)
-
-# Install geopm-service RPMs
-INSTALL_COMMAND="sudo /usr/sbin/install_service.sh ${GEOPM_VERSION} ${USER}"
-UNINSTALL_COMMAND="sudo /usr/sbin/install_service.sh --remove"
-srun -w ${SLURM_NODELIST} -N ${SLURM_NNODES} ${INSTALL_COMMAND}
-
-# Set initial access to signals and controls
-cat > grant_access.sh <<EOF
-#!/bin/bash
-sudo geopmaccess -a | sudo geopmaccess -w
-sudo geopmaccess -ac | sudo geopmaccess -wc
-EOF
-chmod +x grant_access.sh
-srun -w ${SLURM_NODELIST} -N ${SLURM_NNODES} grant_access.sh
+install_service.sh
+rc=$?
+if [ "${rc}" -ne 0 ]; then
+    echo "ERROR: Installing the GEOPM Access Service failed"
+    exit ${rc}
+fi
 
 python3 -m unittest discover \
         --top-level-directory ${GEOPM_SOURCE} \
@@ -33,19 +24,22 @@ python3 -m unittest discover \
 ERR=$?
 
 if [ "${ERR}" -eq 0 ]; then
-	python3 -m unittest discover \
-			--top-level-directory ${GEOPM_SOURCE} \
-			--start-directory ${GEOPM_SOURCE}/service/integration/test \
-			--pattern 'test_*.py' \
-			--verbose &>> test-service.log
-	ERR=$?
+    python3 -m unittest discover \
+            --top-level-directory ${GEOPM_SOURCE} \
+            --start-directory ${GEOPM_SOURCE}/integration/service/test \
+            --pattern 'test_*.py' \
+            --verbose &>> test-service.log
+    ERR=$?
 fi
 # TODO Rebuild the compute image again with the latest install_service.sh
 
 srun -w ${SLURM_NODELIST} -N ${SLURM_NNODES} ${UNINSTALL_COMMAND}
 
 # Restore the "gold" version of the RPMs
-~test/bin/install_service_gold.sh
+set -x
+uninstall_service.sh
+install_service_gold.sh
+set +x
 
 if [ "${ERR}" -eq 0 ]; then
     echo "SUCCESS"
