@@ -105,13 +105,6 @@ export PATH=\
 "/usr/lib/ccache:"\
 "${HOME}/bin:"\
 "${HOME}/.local/bin:"\
-"${HOME}/build/byobu/bin:"\
-"${HOME}/build/tmux/bin:"\
-"${HOME}/build/weechat/bin:"\
-"${HOME}/build/msr-tools/bin:"\
-"${HOME}/build/msr-safe/bin:"\
-"${HOME}/build/git/bin:"\
-"${HOME}/build/lcov/bin:"\
 "${PATH}"
 
 export PYTHONSTARTUP="${HOME}/.python_startup"
@@ -120,7 +113,4 @@ export EDITOR=vim
 unset GNOME_KEYRING_CONTROL
 unset PROMPT_COMMAND
 export TZ="/usr/share/zoneinfo/US/Pacific"
-
-stty erase '^?'
-stty -ixon
 

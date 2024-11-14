@@ -121,6 +121,7 @@ vcommit(){
 
 # Git aliases
 alias gs='git status'
+alias gsu='git status -uno'
 alias gd='git diff'
 alias gdc='git diff --cached'
 alias glist='for ref in $(git for-each-ref --sort=-committerdate --format="%(refname)" refs/heads/ refs/remotes ); do git log -n1 $ref --pretty=format:"%Cgreen%cr%Creset %C(yellow)%d%Creset %C(bold blue)<%an>%Creset%n" | cat ; done | awk '"'! a["'$0'"]++' | head -n 20"
