@@ -49,6 +49,10 @@ check_rc "Output directory creation failed.  The disk is full." "/"
 ln -sfn ${LOG_DIR} $(dirname ${LOG_DIR})/latest
 check_rc "Symlink to output directory creation failed.  The disk is full." "/"
 
+# Install py reqs
+install_py_reqs.sh
+check_rc "Installing python requirements with pip failed" "${LOG_DIR}/pip.log"
+
 # Setup build environment
 source ${HOME}/geopm/integration/config/build_env.sh
 
@@ -66,10 +70,6 @@ if [ -z "${GEOPM_SKIP_CHECKOUT}" ]; then
     # reset_pr_test
     # get_pr XXXX
 fi
-
-# Install py reqs
-install_py_reqs.sh
-check_rc "Installing python requirements with pip failed" "${LOG_DIR}/pip.log"
 
 # DEBUG build w/Intel for maximum unit test coverage
 GEOPM_GLOBAL_CONFIG_OPTIONS="--enable-debug" \
