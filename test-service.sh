@@ -23,6 +23,10 @@ set -ex
 module purge
 module load ohpc ccache
 
+# Install py reqs
+# Logs go to ~/public_html/build_logs/pip*
+install_py_reqs.sh
+
 source ${HOME}/geopm/integration/config/build_env.sh
 export GEOPM_TEST_SBATCH=${HOME}/test-service/test-service.sbatch
 # GEOPM_SKIP_CHECKOUT=True
@@ -40,10 +44,6 @@ if [ -z "$GEOPM_SKIP_CHECKOUT" ]; then
     # reset_pr_test
     # get_pr 2428
 fi
-
-# Install py reqs
-# Logs go to ~/public_html/build_logs/pip*
-install_py_reqs.sh
 
 # Build and install service and base build locally
 GEOPM_SERVICE_CONFIG_OPTIONS="--disable-io-uring" ./integration/config/build.sh
