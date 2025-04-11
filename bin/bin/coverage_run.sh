@@ -35,7 +35,7 @@ mkdir -p ${LOG_DIR}
 ln -sfn ${LOG_DIR} $(dirname ${LOG_DIR})/latest
 
 # Setup build environment - GNU w/override
-source ${HOME}/geopm/integration/config/gnu_env.sh
+sed -i 's/mcfly/gnu/g' ~/.geopmrc
 GEOPM_SKIP_COMPILER_CHECK=yes source ${HOME}/geopm/integration/config/build_env.sh
 
 # Assume the branch history was setup correctly in test_legacy.sh
@@ -52,6 +52,8 @@ GEOPM_SERVICE_CONFIG_OPTIONS="--disable-io-uring" \
 > ${LOG_DIR}/build_gnu_release.out \
 2> ${LOG_DIR}/build_gnu_release.err
 check_rc "GNU build failed" "${LOG_DIR}/build_gnu_release.err"
+
+sed -i 's/gnu/mcfly/g' ~/.geopmrc
 
 # Use source build of lcov to resolve: https://github.com/linux-test-project/lcov/issues/58
 #    The version in zypper is too old
