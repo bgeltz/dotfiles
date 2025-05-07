@@ -41,6 +41,8 @@ echo '######################################################################'
 module purge
 module load ohpc
 
+source ~/.geopmrc
+
 # Setup output dirs
 export TIMESTAMP=$(date +\%F_\%H\%M)
 export LOG_DIR=${HOME}/public_html/cron_runs/${TIMESTAMP}
@@ -48,13 +50,6 @@ mkdir -p ${LOG_DIR}
 check_rc "Output directory creation failed.  The disk is full." "/"
 ln -sfn ${LOG_DIR} $(dirname ${LOG_DIR})/latest
 check_rc "Symlink to output directory creation failed.  The disk is full." "/"
-
-# Install py reqs
-install_py_reqs.sh
-check_rc "Installing python requirements with pip failed" "${LOG_DIR}/pip.log"
-
-# Setup build environment
-source ${HOME}/geopm/integration/config/build_env.sh
 
 # Set up git repository
 REMOTE=origin
@@ -70,6 +65,13 @@ if [ -z "${GEOPM_SKIP_CHECKOUT}" ]; then
     # reset_pr_test
     # get_pr XXXX
 fi
+
+# Install py reqs
+install_py_reqs.sh
+check_rc "Installing python requirements with pip failed" "${LOG_DIR}/pip.log"
+
+# Setup build environment
+source ${HOME}/geopm/integration/config/build_env.sh
 
 # DEBUG build w/Intel for maximum unit test coverage
 GEOPM_GLOBAL_CONFIG_OPTIONS="--enable-debug" \
