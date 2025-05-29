@@ -70,6 +70,8 @@ fi
 install_py_reqs.sh
 check_rc "Installing python requirements with pip failed" "${LOG_DIR}/pip.log"
 
+sed -i 's/gnu/mcfly/g' ~/.geopmrc
+
 # Setup build environment
 source ${HOME}/geopm/integration/config/build_env.sh
 
