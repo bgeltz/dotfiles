@@ -4,4 +4,3 @@ export HISTTIMEFORMAT="%m/%d/%y %T "
 if [ -f "$HOME/.bashrc" ]; then
     . "$HOME/.bashrc"
 fi
-

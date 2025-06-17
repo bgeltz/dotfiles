@@ -119,6 +119,11 @@ vcommit(){
     vim -p $(git diff-tree --no-commit-id --name-only -r ${COMMIT})
 }
 
+ccommit(){
+    COMMIT=${1-HEAD}
+    code $(git diff-tree --no-commit-id --name-only -r ${COMMIT})
+}
+
 # Git aliases
 alias gs='git status'
 alias gsu='git status -uno'

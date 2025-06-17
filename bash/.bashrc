@@ -112,5 +112,7 @@ export HISTTIMEFORMAT="%m/%d/%y %T "
 export EDITOR=vim
 unset GNOME_KEYRING_CONTROL
 unset PROMPT_COMMAND
-export TZ="/usr/share/zoneinfo/US/Pacific"
+export TZ="/usr/share/zoneinfo/America/Los_Angeles"
 
+# stty erase '^?'
+# stty -ixon
