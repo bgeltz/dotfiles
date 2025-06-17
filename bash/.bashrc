@@ -102,16 +102,10 @@ esac
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
 export PATH=\
-"/usr/lib/ccache:"\
 "${HOME}/bin:"\
 "${HOME}/.local/bin:"\
 "${HOME}/build/byobu/bin:"\
-"${HOME}/build/tmux/bin:"\
-"${HOME}/build/weechat/bin:"\
-"${HOME}/build/msr-tools/bin:"\
-"${HOME}/build/msr-safe/bin:"\
-"${HOME}/build/git/bin:"\
-"${HOME}/build/lcov/bin:"\
+"/usr/lib/ccache:"\
 "${PATH}"
 
 export PYTHONSTARTUP="${HOME}/.python_startup"
